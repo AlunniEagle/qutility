@@ -1,0 +1,67 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=QUtility
+qgisMinimumVersion=3.28.9
+qgisMaximumVersion=3.99
+description=Un toolbox multifunzione per QGIS: rinomina layer, cambia tipi di campo, importa shapefile da ZIP e altro ancora, tutto in pochi clic.
+version=3.4
+author=Lorenzo Alunni, Marco Peppucci
+email=gis@eagleprojects.it
+
+about=Plugin per QGIS che raccoglie una serie di strumenti pratici per semplificare le operazioni quotidiane nella gestione dei dati geografici. Include funzioni utili come la rinomina massiva dei layer, la modifica del tipo di campo nelle tabelle attributi, il caricamento automatico di shapefile da cartelle (inclusi archivi ZIP annidati) e molto altro. Ideale per chi lavora frequentemente con grandi quantità di dati vettoriali e vuole velocizzare le operazioni ripetitive.
+
+tracker=https://eagleprojects.atlassian.net/browse/GIS-410
+repository=https://gitlab.eagleprojects.cloud/qgis-plugins/ep/
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=no
+# Uncomment the following line and add your changelog:
+changelog=3.4
+    - Miglioramento icona per tool "Overlaps Counter"
+    3.3
+    - Aggiunta tool "Overlaps Counter" per il conteggio di sovrapposizioni tra due layer
+    - Miglioramento formattazione descrizioni dei vari tool
+    3.0
+    - Aggiunta tool "Batch Converter" per la conversione in massa di file con opzioni avanzate di filtraggio.
+    2.3
+    - Risolto mancato import modulo resources_rc.
+    2.2
+    - Risolto problema compatibilità versioni QGIS.
+    2.1
+    - Aggiunta la possibilità di rinominare il campo modificato nel Field Modifier.
+    2.0
+    - Aggiunta tool "Exclude Features" per la rimozione di elementi da un layer che corrispondono ad altre presenti in un secondo layer, con confronto attributi e geometria.
+    - Aggiunta tool "Field Modifier" per modificare tipo e lunghezza dei campi nei layer.
+    - Aggiunta tool "Renamer Layers+" per rinominare layer con prefissi, suffissi, rimozioni e sostituzioni.
+    - Aggiunta tool "Smart Layer Loader" per caricare massivamente layer da cartelle o archivi compressi con supporto ricorsivo.
+    1.0
+    - Ultima versione sperimentale.
+
+# Tags are comma separated with spaces allowed
+tags=vector, select, processing, polygon, line, layers, utility
+
+homepage=http://www.eagleprojects.it
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+

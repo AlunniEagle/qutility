@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/plugins/qutility" >
+        <file>icon.png</file>
+        <file>images/fm.png</file>
+        <file>images/logo_eagleprojects.svg</file>
+        <file>images/guide.png</file>
+        <file>images/play.png</file>
+        <file>images/layers.png</file>
+        <file>images/rename.png</file>
+        <file>images/load.png</file>
+        <file>images/exclude.png</file>
+        <file>images/csv.png</file>
+        <file>images/processor.png</file>
+        <file>images/delete.png</file>
+        <file>images/close.png</file>
+        <file>images/ask.png</file>
+        <file>images/1.png</file>
+        <file>images/2.png</file>
+        <file>images/convert.png</file>
+        <file>images/overlap.png</file>
+    </qresource>
+</RCC>
