@@ -2,7 +2,7 @@
 
 ![QGIS Plugin](https://img.shields.io/badge/QGIS-3.28%2B-green)
 ![Status](https://img.shields.io/badge/status-stable-brightgreen)
-![License](https://img.shields.io/badge/license-GPL--2.0-blue)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 **QUtility** is a multifunctional toolbox for QGIS, designed to simplify and speed up everyday vector data management tasks. It is ideal for users who work with large amounts of data and need to automate repetitive operations.
 
