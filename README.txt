@@ -1,4 +1,4 @@
-Plugin Builder Results
+Plugin Builder Results - test
 
 Your plugin QUtility was created in:
     C:/Users/lalunni/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins\qutility
