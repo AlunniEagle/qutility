@@ -15,6 +15,8 @@
 - **Exclude features** based on user-defined criteria  
 - **Count overlapping features** between two line layers and export the result  
 
+> 🔤 **Note**: The plugin interface is currently only available in **Italian**
+
 ## 🖥️ Requirements
 
 - **QGIS version**: 3.28.9 to 3.99
