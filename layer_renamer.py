@@ -69,9 +69,9 @@ class LayerRenamer:
         """Aggiorna il conteggio dei layer selezionati"""
         selected_count = len(self.dialog.rllayerlist.selectedItems())
         if selected_count > 0:
-            self.dialog.rlrun.setText(f"  Rinomina Selezionati ({selected_count})")
+            self.dialog.rlrun.setText(f"  Rename Selected ({selected_count})")
         else:
-            self.dialog.rlrun.setText("  Rinomina Selezionati")
+            self.dialog.rlrun.setText("  Rename Selected")
     
     def toggle_replace_field(self, text):
         """Attiva/disattiva il campo di sostituzione in base al contenuto del campo 'Sostituisci'"""
@@ -97,7 +97,7 @@ class LayerRenamer:
         # Ottieni i layer selezionati
         selected_layers = self.get_selected_layers()
         if not selected_layers:
-            QMessageBox.warning(self.dialog, "Attenzione", "Seleziona almeno un layer")
+            QMessageBox.warning(self.dialog, "Warning", "Select at least one layer")
             return
         
         # Ottieni i valori dai campi
@@ -110,21 +110,21 @@ class LayerRenamer:
             remove_left = int(self.dialog.rlsx.text() or "0")
             remove_right = int(self.dialog.rldx.text() or "0")
         except ValueError:
-            QMessageBox.warning(self.dialog, "Errore", "I valori per rimuovere i caratteri devono essere numeri")
+            QMessageBox.warning(self.dialog, "Error", "The values for removing characters must be numbers")
             return
         
         # Verifica se è stato inserito almeno un parametro
         if not (prefix or suffix or search_text or remove_left > 0 or remove_right > 0):
-            QMessageBox.warning(self.dialog, "Attenzione", "Inserisci almeno un parametro di rinomina")
+            QMessageBox.warning(self.dialog, "Warning", "Enter at least one rename parameter")
             return
         
         # Verifica se è stato inserito un testo di ricerca ma non di sostituzione
         if search_text and not replace_text:
             reply = QMessageBox.question(
                 self.dialog,
-                "Conferma",
-                "Hai inserito un testo da sostituire ma non un testo sostitutivo.\n"
-                "Vuoi procedere eliminando il testo da sostituire?",
+                "Confirmation",
+                "You have entered a text to replace but not a replacement text.\n"
+                "Do you want to proceed by removing the text to replace?",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No
             )
@@ -135,22 +135,22 @@ class LayerRenamer:
         # Chiedi conferma
         operations = []
         if prefix:
-            operations.append(f"Aggiungere il prefisso: '{prefix}'")
+            operations.append(f"Add the prefix: '{prefix}'")
         if suffix:
-            operations.append(f"Aggiungere il suffisso: '{suffix}'")
+            operations.append(f"Add the suffix: '{suffix}'")
         if search_text:
-            operations.append(f"Sostituire '{search_text}' con '{replace_text}'")
+            operations.append(f"Replace '{search_text}' with '{replace_text}'")
         if remove_left > 0:
-            operations.append(f"Rimuovere {remove_left} caratteri da sinistra")
+            operations.append(f"Remove {remove_left} characters from the left")
         if remove_right > 0:
-            operations.append(f"Rimuovere {remove_right} caratteri da destra")
-        
+            operations.append(f"Remove {remove_right} characters from the right")
+
         operation_text = "\n".join([f"- {op}" for op in operations])
         
         reply = QMessageBox.question(
             self.dialog,
-            "Conferma",
-            f"Applicare le seguenti operazioni ai {len(selected_layers)} layer selezionati?\n\n{operation_text}",
+            "Confirmation",
+            f"Apply the following operations to the {len(selected_layers)} selected layers?\n\n{operation_text}",
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No
         )
@@ -162,8 +162,8 @@ class LayerRenamer:
         
         # Crea e mostra il popup di elaborazione
         progress_dialog = QMessageBox(self.dialog)
-        progress_dialog.setWindowTitle("Elaborazione in corso")
-        progress_dialog.setText("Rinomina dei layer in corso...\nNon chiudere QGIS.")
+        progress_dialog.setWindowTitle("Processing in progress")
+        progress_dialog.setText("Renaming layers in progress...\nDo not close QGIS.")
         progress_dialog.setStandardButtons(QMessageBox.NoButton)
         progress_dialog.setIcon(QMessageBox.Information)
         
@@ -244,7 +244,7 @@ class LayerRenamer:
             result_message = "Nessun layer rinominato."
         
         # Mostra messaggio di completamento
-        QMessageBox.information(self.dialog, "Completato", result_message)
+        QMessageBox.information(self.dialog, "Completed", result_message)
         
         # Aggiorna la lista dei layer nel plugin
         self.populate_layers()

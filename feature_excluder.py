@@ -92,8 +92,8 @@ class FeatureExcluder:
         self.dialog.efspat.clear()
         
         # Add only the two required spatial relations
-        self.dialog.efspat.addItem("Interseca", "intersects")
-        self.dialog.efspat.addItem("Contiene", "contains")
+        self.dialog.efspat.addItem("Intersects", "intersects")
+        self.dialog.efspat.addItem("Contains", "contains")
         
         # Set default to "Intersects"
         self.dialog.efspat.setCurrentIndex(0)
@@ -271,7 +271,7 @@ class FeatureExcluder:
         spatial_relation = self.dialog.efspat.currentData() if self.dialog.efspat.isEnabled() else "equals"
         
         if not source_layer or not match_layer:
-            QMessageBox.warning(self.dialog, "Attenzione", "Seleziona entrambi i layer")
+            QMessageBox.warning(self.dialog, "Warning", "Select both layers")
             return
         
         # Ottieni i campi di unione
@@ -280,7 +280,7 @@ class FeatureExcluder:
         
         
         if not source_field_name or not match_field_name:
-            QMessageBox.warning(self.dialog, "Attenzione", "Seleziona i campi di unione")
+            QMessageBox.warning(self.dialog, "Warning", "Select join fields")
             return
         
         # Opzioni avanzate
@@ -291,13 +291,13 @@ class FeatureExcluder:
         if source_layer.id() == match_layer.id():
             reply = QMessageBox.warning(
                 self.dialog, 
-                "Attenzione",
+                "Warning",
                 "<html>"
-                "Hai selezionato lo stesso layer come sorgente e come confronto.<br><br>"
-                f"<b>Layer sorgente:</b> <span style='color:#0066cc; font-weight:bold; font-style:italic;'>{source_layer.name()}</span><br>"
-                f"<b>Layer di confronto:</b> <span style='color:#cc6600; font-weight:bold; font-style:italic;'>{match_layer.name()}</span><br><br>"
-                "Questo significa che stai cercando feature duplicate all'interno dello stesso layer.<br><br>"
-                "Vuoi procedere?"
+                "You have selected the same layer as both source and comparison.<br><br>"
+                f"<b>Source layer:</b> <span style='color:#0066cc; font-weight:bold; font-style:italic;'>{source_layer.name()}</span><br>"
+                f"<b>Comparison layer:</b> <span style='color:#cc6600; font-weight:bold; font-style:italic;'>{match_layer.name()}</span><br><br>"
+                "This means you are looking for duplicate features within the same layer.<br><br>"
+                "Do you want to proceed?"
                 "</html>",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No
@@ -314,8 +314,8 @@ class FeatureExcluder:
         
         # Crea e mostra il popup di elaborazione
         progress_dialog = QMessageBox(self.dialog)
-        progress_dialog.setWindowTitle("Elaborazione in corso")
-        progress_dialog.setText("Analisi delle feature da escludere in corso...\nNon chiudere QGIS.")
+        progress_dialog.setWindowTitle("Processing in progress")
+        progress_dialog.setText("Analyzing features to exclude...\nDo not close QGIS.")
         progress_dialog.setStandardButtons(QMessageBox.NoButton)
         progress_dialog.setIcon(QMessageBox.Information)
         progress_dialog.show()
@@ -483,16 +483,16 @@ class FeatureExcluder:
             if not features_to_delete:
                 QMessageBox.information(
                     self.dialog, 
-                    "Risultato", 
-                    "Non è stato trovato alcun record corrispondente.\n"
-                    "Controlla i campi di unione e le geometrie."
+                    "Result", 
+                    "No matching records found.\n"
+                    "Check the join fields and geometries."
                 )
                 self.toggle_controls(True)
                 return
             
             # Create a dialog to show features that will be deleted
             selection_dialog = QtWidgets.QDialog(self.dialog)
-            selection_dialog.setWindowTitle("Selezione Feature")
+            selection_dialog.setWindowTitle("Feature selection")
             selection_dialog.setMinimumWidth(1000)
             selection_dialog.setMinimumHeight(600)
             
@@ -500,8 +500,8 @@ class FeatureExcluder:
             layout = QtWidgets.QVBoxLayout()
             
             # Add info label
-            info_label = QtWidgets.QLabel(f"Trovate {len(features_to_delete)} feature da eliminare.")
-            
+            info_label = QtWidgets.QLabel(f"Found {len(features_to_delete)} features to delete.")
+
             if check_geometry:
                 features_with_equal_geom = [fid for fid in features_to_delete 
                                         if fid not in features_with_different_geom]
@@ -694,29 +694,29 @@ class FeatureExcluder:
                 if not features_to_delete:
                     QMessageBox.information(
                         self.dialog,
-                        "Operazione annullata",
-                        "Nessuna feature selezionata per l'eliminazione."
+                        "Operation cancelled",
+                        "No feature selected for deletion."
                     )
                     self.toggle_controls(True)
                     return
                 
                 # Check if backup is requested
                 if self.dialog.efbkp.isChecked():
-                    progress_dialog.setText("Creazione backup in corso...\nNon chiudere QGIS.")
+                    progress_dialog.setText("Creating backup in progress...\nDo not close QGIS.")
                     QApplication.processEvents()
                     
                     # Create backup of the source layer
                     backup_path = self.create_layer_backup(source_layer)
                     
                     if backup_path:
-                        progress_dialog.setText(f"Backup creato: {backup_path}")
+                        progress_dialog.setText(f"Backup created: {backup_path}")
                     else:
                         # If backup failed, ask if user wants to continue
                         progress_dialog.accept()
                         reply = QMessageBox.question(
                             self.dialog,
-                            "Errore Backup",
-                            "Non è stato possibile creare il backup del layer.\nProcedere comunque con l'eliminazione?",
+                            "Backup error",
+                            "Failed to create layer backup.\nProceed with deletion?",
                             QMessageBox.Yes | QMessageBox.No,
                             QMessageBox.No
                         )
@@ -726,8 +726,8 @@ class FeatureExcluder:
                 
                 # Create progress dialog for deletion
                 progress_dialog = QMessageBox(self.dialog)
-                progress_dialog.setWindowTitle("Elaborazione in corso")
-                progress_dialog.setText(f"Eliminazione di {len(features_to_delete)} feature in corso...\nNon chiudere QGIS.")
+                progress_dialog.setWindowTitle("Processing in progress")
+                progress_dialog.setText(f"Deleting {len(features_to_delete)} features...\nDo not close QGIS.")
                 progress_dialog.setStandardButtons(QMessageBox.NoButton)
                 progress_dialog.setIcon(QMessageBox.Information)
                 progress_dialog.show()
@@ -749,8 +749,8 @@ class FeatureExcluder:
                 # Mostra il messaggio di completamento
                 QMessageBox.information(
                     self.dialog,
-                    "Operazione completata",
-                    f"Eliminate {len(features_to_delete)} feature dal layer {source_layer.name()}."
+                    "Operation completed",
+                    f"Deleted {len(features_to_delete)} features from layer {source_layer.name()}."
                 )
             
             else:
@@ -762,8 +762,8 @@ class FeatureExcluder:
             # Gestione degli errori
             QMessageBox.critical(
                 self.dialog,
-                "Errore",
-                f"Si è verificato un errore durante l'operazione:\n{str(e)}"
+                "Error",
+                f"An error occurred during the operation:\n{str(e)}"
             )
             
             # Annulla le modifiche al layer se necessario
@@ -1033,20 +1033,20 @@ class FeatureExcluder:
             # Show success message
             QMessageBox.information(
                 self.dialog,
-                "Esportazione completata",
-                f"Dati esportati correttamente in:\n{filepath}"
+                "Export completed",
+                f"Data successfully exported to:\n{filepath}"
             )
             
         except Exception as e:
             QMessageBox.critical(
                 self.dialog,
-                "Errore di esportazione",
-                f"Si è verificato un errore durante l'esportazione:\n{str(e)}"
+                "Export error",
+                f"An error occurred during export:\n{str(e)}"
             )
 
     def add_temp_layer_button(self, table, layout, source_layer, features_to_delete, features_with_different_geom):
         """Adds a button to create a temporary layer from selected features"""
-        temp_layer_button = QtWidgets.QPushButton("Crea Layer Temporaneo")
+        temp_layer_button = QtWidgets.QPushButton("Create Temporary Layer")
         temp_layer_button.clicked.connect(lambda: self.create_temp_layer(table, source_layer, features_with_different_geom))
         layout.addWidget(temp_layer_button)
         
@@ -1074,8 +1074,8 @@ class FeatureExcluder:
             if not selected_indices:
                 QMessageBox.warning(
                     self.dialog,
-                    "Nessuna feature selezionata",
-                    "Seleziona almeno una feature per creare il layer temporaneo."
+                    "No features selected",
+                    "Please select at least one feature to create the temporary layer."
                 )
                 return
             
@@ -1093,8 +1093,8 @@ class FeatureExcluder:
             if not feature_ids:
                 QMessageBox.warning(
                     self.dialog,
-                    "Dati non validi",
-                    "Impossibile ottenere gli ID delle feature selezionate."
+                    "Invalid data",
+                    "Unable to obtain the IDs of the selected features."
                 )
                 return
             
@@ -1127,8 +1127,8 @@ class FeatureExcluder:
             if not temp_layer.isValid():
                 QMessageBox.critical(
                     self.dialog,
-                    "Errore",
-                    "Impossibile creare il layer temporaneo."
+                    "Error",
+                    "Unable to create the temporary layer."
                 )
                 return
             
@@ -1180,16 +1180,16 @@ class FeatureExcluder:
             # Show success message
             QMessageBox.information(
                 self.dialog,
-                "Layer creato",
-                f"Layer temporaneo '{temp_layer_name}' creato con successo.\n\n"
-                f"Contiene {len(new_features)} elementi."
+                "Layer created",
+                f"Temporary layer '{temp_layer_name}' created successfully.\n\n"
+                f"Contains {len(new_features)} features."
             )
             
         except Exception as e:
             QMessageBox.critical(
                 self.dialog,
-                "Errore",
-                f"Si è verificato un errore durante la creazione del layer temporaneo:\n{str(e)}"
+                "Error",
+                f"An error occurred while creating the temporary layer:\n{str(e)}"
             )
 
     def style_temp_layer(self, layer):
@@ -1345,49 +1345,49 @@ class FeatureExcluder:
                 }
             </style>
         </head>
-        <body><div class="content-container"><h2>Come funzionano le relazioni spaziali</h2>
+        <body><div class="content-container"><h2>How Spatial Relations Work</h2>
                 
-        <p>Le relazioni spaziali determinano come due geometrie vengono confrontate quando si utilizza una tolleranza maggiore di zero.</p>
+        <p>Spatial relations determine how two geometries are compared when using a tolerance greater than zero.</p>
                 
-        <h3>Esempio 1: Linee che si intersecano</h3>
+        <h3>Example 1: Intersecting Lines</h3>
         <div class="example-container">
             <div class="image-container">
-                <img src=":/plugins/qutility/images/1.png" alt="Linee che si intersecano" />
+                <img src=":/plugins/qutility/images/1.png" alt="Intersecting lines" />
             </div>
             <div class="explanation">
-                <p><strong>Descrizione:</strong> In questo esempio, la linea Sorgente (marrone) e la linea Confronto (verde) si intersecano formando una X.</p>
+                <p><strong>Description:</strong> In this example, the Source line (brown) and the Comparison line (green) intersect forming an X.</p>
                 
-                <p><strong>Con relazione "Interseca":</strong></p>
-                <p>Le linee si intersecano in un punto, quindi con una tolleranza > 0, le geometrie sono considerate uguali.</p>
-                <div class="result equal">Risultato: Geometrie UGUALI</div>
+                <p><strong>With "Intersects" relation:</strong></p>
+                <p>The lines intersect at one point, so with tolerance > 0, the geometries are considered equal.</p>
+                <div class="result equal">Result: Geometries EQUAL</div>
                 
-                <p><strong>Con relazione "Contiene":</strong></p>
-                <p>La linea Sorgente non contiene completamente la linea Confronto, quindi le geometrie sono considerate diverse.</p>
-                <div class="result different">Risultato: Geometrie DIVERSE</div>
+                <p><strong>With "Contains" relation:</strong></p>
+                <p>The Source line does not completely contain the Comparison line, so the geometries are considered different.</p>
+                <div class="result different">Result: Geometries DIFFERENT</div>
             </div>
         </div>
                 
-        <h3>Esempio 2: Linee parallele ravvicinate</h3>
+        <h3>Example 2: Close Parallel Lines</h3>
         <div class="example-container">
             <div class="image-container">
-                <img src=":/plugins/qutility/images/2.png" alt="Linee parallele" />
+                <img src=":/plugins/qutility/images/2.png" alt="Parallel lines" />
             </div>
             <div class="explanation">
-                <p><strong>Descrizione:</strong> In questo esempio, la linea Sorgente (marrone) e la linea Confronto (verde) sono parallele e molto vicine tra loro.</p>
+                <p><strong>Description:</strong> In this example, the Source line (brown) and the Comparison line (green) are parallel and very close to each other.</p>
                 
-                <p><strong>Con relazione "Interseca":</strong></p>
-                <p>Con una tolleranza sufficiente (es. 1 metro), il buffer creato attorno alla linea Sorgente interseca la linea Confronto, quindi le geometrie sono considerate uguali.</p>
-                <div class="result equal">Risultato: Geometrie UGUALI</div>
+                <p><strong>With "Intersects" relation:</strong></p>
+                <p>With sufficient tolerance (e.g., 1 meter), the buffer created around the Source line intersects the Comparison line, so the geometries are considered equal.</p>
+                <div class="result equal">Result: Geometries EQUAL</div>
                 
-                <p><strong>Con relazione "Contiene":</strong></p>
-                <p>Con una tolleranza sufficiente, il buffer creato attorno alla linea Sorgente può contenere completamente la linea Confronto, quindi le geometrie sono considerate uguali.</p>
-                <div class="result equal">Risultato: Geometrie UGUALI</div>
+                <p><strong>With "Contains" relation:</strong></p>
+                <p>With sufficient tolerance, the buffer created around the Source line can completely contain the Comparison line, so the geometries are considered equal.</p>
+                <div class="result equal">Result: Geometries EQUAL</div>
             </div>
         </div>
                 
         <div class="tolerance-note">
-            <p><strong>Nota sulla tolleranza:</strong> La tolleranza determina la dimensione del buffer utilizzato per il confronto. Un valore maggiore di tolleranza permette una maggiore flessibilità nel confronto.</p>
-            <p>Quando la tolleranza è impostata a 0, le geometrie devono essere <em>esattamente</em> identiche per essere considerate uguali, indipendentemente dalla relazione spaziale selezionata.</p>
+            <p><strong>Note on tolerance:</strong> Tolerance determines the size of the buffer used for comparison. A higher tolerance value allows greater flexibility in the comparison.</p>
+            <p>When tolerance is set to 0, geometries must be <em>exactly</em> identical to be considered equal, regardless of the selected spatial relation.</p>
         </div>
         </div></body>
         </html>

@@ -346,7 +346,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 **GIS Team by Eagleprojects S.p.A**
 - Email: gis@eagleprojects.it
-- Company: [EagleProjects S.p.A.](https://www.eagleprojects.it)
+- Company: Eagleprojects
 - GitHub: [@AlunniEagle](https://github.com/AlunniEagle)
 
 

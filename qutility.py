@@ -243,8 +243,8 @@ class QUtility:
                 if not all([layer1, layer2]):
                     QMessageBox.warning(
                         self.dlg,
-                        "Errore",
-                        "Seleziona entrambi i layer richiesti prima di procedere"
+                        "Error",
+                        "Select both required layers before proceeding"
                     )
                     return
                 
@@ -255,8 +255,8 @@ class QUtility:
                 if not output_path:
                     QMessageBox.warning(
                         self.dlg,
-                        "Errore",
-                        "Seleziona il file di output prima di procedere"
+                        "Error",
+                        "Select output file before proceeding"
                     )
                     return
                 
@@ -264,10 +264,10 @@ class QUtility:
                 if layer1.crs().authid() != 'EPSG:4326':
                     reply = QMessageBox.question(
                         self.dlg,
-                        "Sistema di coordinate", 
-                        f"Il layer '{layer1.name()}' non è in EPSG:4326 ({layer1.crs().authid()}).\n"
-                        "Il processo potrebbe non funzionare correttamente.\n"
-                        "Continuare comunque?",
+                        "Coordinate System", 
+                        f"The layer '{layer1.name()}' is not in EPSG:4326 ({layer1.crs().authid()}).\n"
+                        "The process may not work correctly.\n"
+                        "Continue anyway?",
                         QMessageBox.Yes | QMessageBox.No,
                         QMessageBox.No
                     )
@@ -277,10 +277,10 @@ class QUtility:
                 if layer2.crs().authid() != 'EPSG:4326':
                     reply = QMessageBox.question(
                         self.dlg,
-                        "Sistema di coordinate", 
-                        f"Il layer '{layer2.name()}' non è in EPSG:4326 ({layer2.crs().authid()}).\n"
-                        "Il processo potrebbe non funzionare correttamente.\n"
-                        "Continuare comunque?",
+                        "Coordinate System",
+                        f"The layer '{layer2.name()}' is not in EPSG:4326 ({layer2.crs().authid()}).\n"
+                        "The process may not work correctly.\n"
+                        "Continue anyway?",
                         QMessageBox.Yes | QMessageBox.No,
                         QMessageBox.No
                     )
@@ -295,16 +295,16 @@ class QUtility:
                 if use_selected_layer1 and layer1.selectedFeatureCount() == 0:
                     QMessageBox.warning(
                         self.dlg,
-                        "Errore", 
-                        f"Il layer '{layer1.name()}' non ha elementi selezionati"
+                        "Error", 
+                        f"The layer '{layer1.name()}' has no selected features"
                     )
                     return
                     
                 if use_selected_layer2 and layer2.selectedFeatureCount() == 0:
                     QMessageBox.warning(
                         self.dlg,
-                        "Errore", 
-                        f"Il layer '{layer2.name()}' non ha elementi selezionati"
+                        "Error", 
+                        f"The layer '{layer2.name()}' has no selected features"
                     )
                     return
                 
@@ -431,7 +431,7 @@ class QUtility:
                     QgsMessageLog.logMessage(f"⏱️ Elaborazione completata in {seconds:.2f} secondi", "QUtility", Qgis.Info)
 
                 # Mostra popup di successo
-                success_message = "Elaborazione Overlaps Counter completata con successo!\n\n"
+                success_message = "Overlaps Counter processing completed successfully!\n\n"
                 
                 QMessageBox.information(self.dlg, "Overlaps Counter", success_message)
                 

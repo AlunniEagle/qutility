@@ -98,11 +98,11 @@ class LayerLoader:
     def populate_geometry_combobox(self):
         """Popola il combobox delle geometrie"""
         self.dialog.llgeom.clear()
-        self.dialog.llgeom.addItem("Qualsiasi geometria", "any")
-        self.dialog.llgeom.addItem("Punto/Multipunto", "Point")
-        self.dialog.llgeom.addItem("Linea/Multilinea", "Line")
-        self.dialog.llgeom.addItem("Poligono/Multipoligono", "Polygon")
-    
+        self.dialog.llgeom.addItem("Any geometry", "any")
+        self.dialog.llgeom.addItem("Point/Multipoint", "Point")
+        self.dialog.llgeom.addItem("Line/Multiline", "Line")
+        self.dialog.llgeom.addItem("Polygon/Multipolygon", "Polygon")
+
     def toggle_text_filter(self, state):
         """Attiva/disattiva il filtro per testo nel nome"""
         self.dialog.lltext.setEnabled(state == Qt.Checked)
@@ -469,8 +469,8 @@ class LayerLoader:
         except Exception as e:
             QMessageBox.warning(
                 self.dialog, 
-                "Errore", 
-                f"Impossibile elaborare l'archivio {archive_path}: {str(e)}"
+                "Error", 
+                f"Unable to process the archive {archive_path}: {str(e)}"
             )
             import traceback
             traceback.print_exc()
@@ -578,7 +578,7 @@ class LayerLoader:
         # Ottieni il percorso sorgente
         source_path = self.dialog.llsource.text().strip()
         if not source_path:
-            QMessageBox.warning(self.dialog, "Attenzione", "Seleziona un percorso sorgente")
+            QMessageBox.warning(self.dialog, "Warning", "Select a source path")
             return
         
         # Verifica se almeno un tipo di file è selezionato
@@ -588,7 +588,7 @@ class LayerLoader:
                 self.dialog.lltif.isChecked() or 
                 self.dialog.llxslx.isChecked() or 
                 self.dialog.lldbf.isChecked()):
-            QMessageBox.warning(self.dialog, "Attenzione", "Seleziona almeno un tipo di file da caricare")
+            QMessageBox.warning(self.dialog, "Warning", "Select at least one file type to load")
             return
         
         # Disabilita i controlli
@@ -596,8 +596,8 @@ class LayerLoader:
         
         # Mostra il popup di elaborazione
         progress_dialog = QMessageBox(self.dialog)
-        progress_dialog.setWindowTitle("Elaborazione in corso")
-        progress_dialog.setText("Caricamento dei layer in corso...\nNon chiudere QGIS.")
+        progress_dialog.setWindowTitle("Processing in progress")
+        progress_dialog.setText("Loading layers...\nDo not close QGIS.")
         progress_dialog.setStandardButtons(QMessageBox.NoButton)
         progress_dialog.setIcon(QMessageBox.Information)
         progress_dialog.show()
@@ -626,8 +626,8 @@ class LayerLoader:
             else:
                 QMessageBox.warning(
                     self.dialog, 
-                    "Errore", 
-                    f"Il percorso specificato non esiste: {source_path}"
+                    "Error", 
+                    f"The specified path does not exist: {source_path}"
                 )
 
             # Rimuovi i gruppi vuoti se l'opzione è attiva
@@ -637,8 +637,8 @@ class LayerLoader:
         except Exception as e:
             QMessageBox.warning(
                 self.dialog, 
-                "Errore", 
-                f"Si è verificato un errore durante il caricamento: {str(e)}"
+                "Error", 
+                f"An error occurred while loading: {str(e)}"
             )
         
         finally:
@@ -652,15 +652,15 @@ class LayerLoader:
             if loaded_count > 0:
                 QMessageBox.information(
                     self.dialog, 
-                    "Completato", 
-                    f"Caricamento completato.\n\nLayer caricati: {loaded_count}"
+                    "Completed", 
+                    f"Loading completed.\n\nLayers loaded: {loaded_count}"
                 )
             else:
                 QMessageBox.warning(
                     self.dialog, 
-                    "Attenzione", 
-                    f"Nessun layer caricato su {total_files} file trovati.\n"
-                    f"Verifica i filtri applicati e i formati selezionati."
+                    "Warning", 
+                    f"No layers loaded from {total_files} files found.\n"
+                    f"Check the applied filters and selected formats."
                 )
     
     def toggle_controls(self, enable):

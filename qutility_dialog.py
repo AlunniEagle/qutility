@@ -210,13 +210,13 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
         # Ottieni i layer selezionati
         selected_layers = self.get_selected_layers()
         if not selected_layers:
-            QMessageBox.warning(self, "Attenzione", "Seleziona almeno un layer")
+            QMessageBox.warning(self, "Warning", "Select at least one layer")
             return
         
         # Ottieni il campo selezionato
         field_name = self.fmfield.currentText()
         if not field_name:
-            QMessageBox.warning(self, "Attenzione", "Seleziona un campo da modificare")
+            QMessageBox.warning(self, "Warning", "Select a field to modify")
             return
         
         # Ottieni il nuovo nome se specificato
@@ -235,7 +235,7 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
             if new_length <= 0:
                 raise ValueError()
         except ValueError:
-            QMessageBox.warning(self, "Errore", "La lunghezza deve essere un numero positivo")
+            QMessageBox.warning(self, "Error", "Length must be a positive number")
             return
         
         # Ottieni la precisione (solo per Double)
@@ -246,16 +246,16 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
                 if precision < 0:
                     raise ValueError()
             except ValueError:
-                QMessageBox.warning(self, "Errore", "La precisione deve essere un numero non negativo")
+                QMessageBox.warning(self, "Error", "Precision must be a non-negative number")
                 return
         
         # Chiedi conferma
-        confirmation_message = f"Modificare il campo '{field_name}' nei layer selezionati?\n\n" \
-                            "Questa operazione potrebbe comportare la perdita di dati se la conversione non è compatibile.\n" \
-                            "Si consiglia di fare un backup prima di procedere.\n\n" \
-                            f"Nuovo tipo: {new_type}\n" \
-                            f"Lunghezza: {new_length}"
-        
+        confirmation_message = f"Modify the field '{field_name}' in the selected layers?\n\n" \
+                            "This operation may result in data loss if the conversion is not compatible.\n" \
+                            "It is recommended to make a backup before proceeding.\n\n" \
+                            f"New type: {new_type}\n" \
+                            f"Length: {new_length}"
+
         if new_type == "Double":
             confirmation_message += f"\nPrecisione: {precision}"
 
@@ -282,8 +282,8 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
         
         # Crea e mostra il popup di elaborazione
         progress_dialog = QMessageBox(self)
-        progress_dialog.setWindowTitle("Elaborazione in corso")
-        progress_dialog.setText("Modifica del campo in corso...\nNon chiudere QGIS.")
+        progress_dialog.setWindowTitle("Processing in progress")
+        progress_dialog.setText("Modifying field in progress...\nDo not close QGIS.")
         progress_dialog.setStandardButtons(QMessageBox.NoButton)
         progress_dialog.setIcon(QMessageBox.Information)
         
@@ -414,8 +414,8 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
             result_message = "Nessun layer elaborato."
         
         # Mostra messaggio di completamento
-        QMessageBox.information(self, "Completato", result_message)
-        
+        QMessageBox.information(self, "Completed", result_message)
+
         # Aggiorna la lista dei campi
         self.update_fields()
     
@@ -487,19 +487,19 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
         # CONFIGURAZIONE DINAMICA DEI CHECKBOX:
         if layer1 and layer1.selectedFeatureCount() > 0:
             self.ckbox_lyr1_oc.setEnabled(True)
-            self.ckbox_lyr1_oc.setText(f"Solo elementi selezionati ({layer1.selectedFeatureCount()})")
+            self.ckbox_lyr1_oc.setText(f"Selected records only ({layer1.selectedFeatureCount()})")
         else:
             self.ckbox_lyr1_oc.setEnabled(False)
             self.ckbox_lyr1_oc.setChecked(False)
-            self.ckbox_lyr1_oc.setText("Solo elementi selezionati")
-        
+            self.ckbox_lyr1_oc.setText("Selected records only")
+
         if layer2 and layer2.selectedFeatureCount() > 0:
             self.ckbox_lyr2_oc.setEnabled(True)
-            self.ckbox_lyr2_oc.setText(f"Solo elementi selezionati ({layer2.selectedFeatureCount()})")
+            self.ckbox_lyr2_oc.setText(f"Selected records only ({layer2.selectedFeatureCount()})")
         else:
             self.ckbox_lyr2_oc.setEnabled(False)
             self.ckbox_lyr2_oc.setChecked(False)
-            self.ckbox_lyr2_oc.setText("Solo elementi selezionati")
+            self.ckbox_lyr2_oc.setText("Selected records only")
 
     def run_overlaps_counter(self):
         """Esegue l'elaborazione Overlaps Counter"""
@@ -516,7 +516,7 @@ class QUtilityDialog(QtWidgets.QDialog, FORM_CLASS):
             if parent_plugin and hasattr(parent_plugin, 'run_overlaps_counter'):
                 parent_plugin.run_overlaps_counter()
             else:
-                QMessageBox.warning(self, "Errore", "Impossibile trovare il metodo di elaborazione")
-                
+                QMessageBox.warning(self, "Error", "Unable to find processing method")
+
         except Exception as e:
-            QMessageBox.critical(self, "Errore", f"Errore durante l'avvio dell'elaborazione: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Error starting processing: {str(e)}")

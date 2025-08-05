@@ -4,11 +4,11 @@
 
 [general]
 name=QUtility
-version=3.4
+version=3.6
 qgisMinimumVersion=3.28.9
 qgisMaximumVersion=3.99
 description=A multifunction toolbox for QGIS: rename layers, change field types, import shapefiles from ZIPs, and more, all in just a few clicks.
-author=Lorenzo Alunni, Marco Peppucci
+author=GIS Team Eagleprojects S.p.A. [Lorenzo Alunni, Marco Peppucci]
 email=gis@eagleprojects.it
 
 about=This QGIS plugin offers a collection of practical tools designed to streamline daily operations in geographic data management. It includes useful functions such as bulk layer renaming, modifying field types in attribute tables, automatic loading of shapefiles from folders (including nested ZIP archives), and much more. It's ideal for anyone who frequently works with large quantities of vector data and wants to speed up repetitive tasks.
@@ -21,7 +21,10 @@ repository=https://github.com/AlunniEagle/qutility
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=3.4
+changelog=3.6
+    - English translation
+    - Uniform text formatting of the descriptions of each tool in the UI
+    3.4
     - Last release
 
 # Tags are comma separated with spaces allowed

@@ -121,11 +121,11 @@ class BatchConverter:
         self.gpkgNameLine.hide()
 
         self.supported_delimiters = {
-            'Tabulazione (\\t)': '\t',
+            'Tabulation (\\t)': '\t',
             # 'Due punti (:)': ':',
-            'Spazio ( )': ' ',
-            'Punto e virgola (;)': ';',
-            'Virgola (,) [Default]': ','
+            'Space ( )': ' ',
+            'Semicolon (;)': ';',
+            'Comma (,) [Default]': ','
         }
         
         # Formati supportati mappati alle estensioni corrispondenti
@@ -167,7 +167,7 @@ class BatchConverter:
 
         # Imposta le intestazioni della tabella
         self.dialog.bctable.setColumnCount(5)
-        headers = ["Nome file", "Tipo", "Dimensione", "Data modifica", "Stato"]
+        headers = ["File name", "Type", "Size", "Modified date", "Status"]
         self.dialog.bctable.setHorizontalHeaderLabels(headers)
 
         # Configura il comportamento di ridimensionamento delle colonne
@@ -355,8 +355,8 @@ class BatchConverter:
             # self.dialog.bcdelimiter.hide()
 
         #     SOLO come “Nuovo nome file (opzionale)”
-        self.dialog.bclayernamelabel.setText("Nome file di output (opzionale):")
-        self.dialog.bclayername.setPlaceholderText("Lascia vuoto per usare il nome originale")
+        self.dialog.bclayernamelabel.setText("Output file name (optional):")
+        self.dialog.bclayername.setPlaceholderText("Leave empty to use original name")
         self.dialog.bclayername.setEnabled(True)
 
         # NEW: gestisci la checkbox “unico GeoPackage”
@@ -415,7 +415,7 @@ class BatchConverter:
         """Aggiunge file dalla directory sorgente alla lista, con filtri"""
         source_dir = self.dialog.bcsourcepath.text()
         if not source_dir or not os.path.isdir(source_dir):
-            QMessageBox.warning(self.dialog, "Errore", "Seleziona una directory sorgente valida")
+            QMessageBox.warning(self.dialog, "Error", "Please select a valid source directory")
             return
         
         self.clear_files()
@@ -435,7 +435,7 @@ class BatchConverter:
         # Aggiungi altri formati supportati...
         
         if not patterns:
-            QMessageBox.warning(self.dialog, "Errore", "Seleziona almeno un tipo di file da convertire")
+            QMessageBox.warning(self.dialog, "Error", "Please select at least one file type to convert")
             return
         
         files_found = []
@@ -459,7 +459,7 @@ class BatchConverter:
         
         # Nessun file trovato
         if not files_found:
-            QMessageBox.information(self.dialog, "Info", "Nessun file trovato con i criteri specificati")
+            QMessageBox.information(self.dialog, "Info", "No files found with the specified criteria")
             return
         
         # Aggiungi i file trovati alla tabella
@@ -613,19 +613,19 @@ class BatchConverter:
         """Avvia il processo di conversione"""
         # Controlla se ci sono file da convertire
         if self.dialog.bctable.rowCount() == 0:
-            QMessageBox.warning(self.dialog, "Errore", "Aggiungi file da convertire")
+            QMessageBox.warning(self.dialog, "Error", "Add files to convert")
             return
         
         # Controlla il percorso di destinazione
         dest_dir = self.dialog.bcdestpath.text()
         if not dest_dir or not os.path.isdir(dest_dir):
-            QMessageBox.warning(self.dialog, "Errore", "Seleziona una directory di destinazione valida")
+            QMessageBox.warning(self.dialog, "Error", "Please select a valid destination directory")
             return
         
         # Ottieni il formato di output
         output_format = self.dialog.bcoutputformat.currentText()
         if not output_format:
-            QMessageBox.warning(self.dialog, "Errore", "Seleziona un formato di output")
+            QMessageBox.warning(self.dialog, "Error", "Please select an output format")
             return
         
         # Flag per unire tutto in un unico GeoPackage
@@ -633,31 +633,30 @@ class BatchConverter:
         
         # Chiedi conferma
         file_count = self.dialog.bctable.rowCount()
-        message = f"Stai per convertire {file_count} file in formato {output_format}.\n\n"
+        message = f"You are about to convert {file_count} files to {output_format} format.\n\n"
         custom_name = self.dialog.bclayername.text().strip()
         if file_count > 1 and custom_name:
-            message += (f"Verranno creati i file:\n"
+            message += (f"The following files will be created:\n"
                         f"  {custom_name}, {custom_name}_1, {custom_name}_2 …\n"
-                        "Procedere?\n\n")
-        message += f"I file convertiti saranno salvati in: {dest_dir}\n\n"
+                        "Proceed?\n\n")
+        message += f"The converted files will be saved in: {dest_dir}\n\n"
         if output_format == 'DXF':
-            message += ("ATTENZIONE: il formato DXF non supporta campi attributo; "
-                        "i valori dei campi saranno persi.\n\n")
+            message += ("WARNING: The DXF format does not support attribute fields; "
+                        "the values of the fields will be lost.\n\n")
         if output_format == 'MapInfo File':
-            message += ("ATTENZIONE: il formato TAB supporta solo campi interi, "
-                        "real e testo. Gli altri campi saranno convertiti in stringa "
-                        "o omessi.\n\n")
-        
+            message += ("WARNING: The MapInfo File format only supports integer, "
+                        "real, and text fields. Other fields will be converted to string "
+                        "or omitted.\n\n")
+
         if use_single_geopackage:
             pkg_base = self.gpkgNameLine.text().strip() or "output"
-            message += f"Tutti i layer saranno uniti in «{pkg_base}.gpkg».\n"
-            
-        
-        message += "\nVuoi procedere con la conversione?"
-        
+            message += f"All layers will be merged into «{pkg_base}.gpkg».\n"
+
+        message += "\nDo you want to proceed with the conversion?"
+
         reply = QMessageBox.question(
             self.dialog, 
-            "Conferma", 
+            "Confirm", 
             message,
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No
@@ -701,8 +700,8 @@ class BatchConverter:
                 if os.path.exists(single_gpkg_path):
                     reply = QMessageBox.question(
                         self.dialog, 
-                        "File esistente", 
-                        f"Il file {single_gpkg_path} esiste già.\nSovrascriverlo?",
+                        "Existing file", 
+                        f"The file {single_gpkg_path} already exists.\nOverwrite it?",
                         QMessageBox.Yes | QMessageBox.No,
                         QMessageBox.No
                     )
@@ -715,7 +714,7 @@ class BatchConverter:
                             QMessageBox.warning(
                                 self.dialog, 
                                 "Errore", 
-                                f"Impossibile eliminare il file esistente: {str(e)}"
+                                f"Unable to delete existing file: {str(e)}"
                             )
                             self.toggle_controls(True)
                             progress_dialog.close()
@@ -976,14 +975,14 @@ class BatchConverter:
             progress_dialog.close()
             
             # Mostra il messaggio di completamento
-            completion_message = f"Conversione completata.\n\n"
-            completion_message += f"File convertiti con successo: {success_count}\n"
-            completion_message += f"File con errori: {error_count}"
-            
+            completion_message = f"Conversion completed.\n\n"
+            completion_message += f"Files successfully converted: {success_count}\n"
+            completion_message += f"Files with errors: {error_count}"
+
             if use_single_geopackage and success_count > 0:
-                completion_message += f"\n\nTutti i layer sono stati salvati nel file:\n{single_gpkg_path}"
+                completion_message += f"\n\nAll layers have been saved in the file:\n{single_gpkg_path}"
             
-            QMessageBox.information(self.dialog, "Completato", completion_message)
+            QMessageBox.information(self.dialog, "Completed", completion_message)
         
         except Exception as e:
             # Gestione degli errori generali
@@ -994,8 +993,8 @@ class BatchConverter:
             )
             QMessageBox.critical(
                 self.dialog, 
-                "Errore", 
-                f"Si è verificato un errore durante la conversione: {str(e)}"
+                "Error", 
+                f"An error occurred during conversion: {str(e)}"
             )
             
             # Chiudi la finestra di progresso in caso di errore
