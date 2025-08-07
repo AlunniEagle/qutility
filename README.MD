@@ -8,7 +8,7 @@
 
 ## 🚀 Main Features Overview
 
-QUtility combines 5 powerful tools in a single, user-friendly interface:
+QUtility combines powerful tools in a single, user-friendly interface:
 
 ### 1. **Field Manager** 🔧
 Advanced field management for vector layers with bulk operations support.
@@ -353,5 +353,6 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ---
 
 **Made with ❤️ for the QGIS community**
+
 
 *QUtility - Simplifying GIS workflows, one tool at a time.*
