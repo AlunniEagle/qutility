@@ -4,7 +4,7 @@
 
 [general]
 name=QUtility
-version=3.6
+version=3.7
 qgisMinimumVersion=3.28.9
 qgisMaximumVersion=3.99
 description=A multifunction toolbox for QGIS: rename layers, change field types, import shapefiles from ZIPs, and more, all in just a few clicks.
@@ -21,7 +21,11 @@ repository=https://github.com/AlunniEagle/qutility
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog=3.6
+changelog=3.7
+    - Fixed resource import bug that could cause errors in some QGIS versions
+    - Improved English translation for better interface localization
+    - Enhanced UI text consistency across all tool tabs
+    3.6
     - English translation
     - Uniform text formatting of the descriptions of each tool in the UI
     3.4

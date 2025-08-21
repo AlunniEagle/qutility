@@ -40,7 +40,7 @@ class ConversionProgressDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, total_files=0):
         super(ConversionProgressDialog, self).__init__(parent)
         
-        self.setWindowTitle("Conversione in corso")
+        self.setWindowTitle("Conversion in progress")
         self.setMinimumWidth(400)
         self.setMinimumHeight(150)
         self.setModal(True)
@@ -49,7 +49,7 @@ class ConversionProgressDialog(QtWidgets.QDialog):
         layout = QtWidgets.QVBoxLayout(self)
         
         # Etichetta di stato
-        self.status_label = QtWidgets.QLabel("Conversione in corso...")
+        self.status_label = QtWidgets.QLabel("Conversion in progress...")
         layout.addWidget(self.status_label)
         
         # Progress Bar
@@ -60,7 +60,7 @@ class ConversionProgressDialog(QtWidgets.QDialog):
         layout.addWidget(self.progress_bar)
         
         # Etichetta di conteggio
-        self.count_label = QtWidgets.QLabel(f"0 / {total_files} completati")
+        self.count_label = QtWidgets.QLabel(f"0 / {total_files} completed")
         layout.addWidget(self.count_label)
         
         # Metti al centro dello schermo
@@ -85,7 +85,7 @@ class ConversionProgressDialog(QtWidgets.QDialog):
     def update_progress(self, completed, total, status=""):
         """Aggiorna la progress bar e le etichette"""
         self.progress_bar.setValue(completed)
-        self.count_label.setText(f"{completed} / {total} completati")
+        self.count_label.setText(f"{completed} / {total} completed")
         
         if status:
             self.status_label.setText(status)
@@ -105,11 +105,11 @@ class BatchConverter:
         self.dialog = dialog
 
         # ── widgets "Nome file GeoPackage" ──────────────────────────────
-        self.gpkgNameLabel = QtWidgets.QLabel("Nome file GeoPackage (opzionale):")
+        self.gpkgNameLabel = QtWidgets.QLabel("GeoPackage file name (optional):")
         self.gpkgNameLabel.setObjectName("bcpackagenamelabel")
         self.gpkgNameLine  = QtWidgets.QLineEdit()
         self.gpkgNameLine.setObjectName("bcpackagename")
-        self.gpkgNameLine.setPlaceholderText("Lascia vuoto per 'output.gpkg'")
+        self.gpkgNameLine.setPlaceholderText("Leave empty for 'output.gpkg'")
 
         # ── infila nella groupBox_10 (che usa un QFormLayout) ──────────
         grp = self.dialog.findChild(QtWidgets.QGroupBox, "groupBox_10")
@@ -252,11 +252,11 @@ class BatchConverter:
     def _singlefile_toggled(self, checked: bool):
         # cambia la label già esistente
         if checked:
-            self.dialog.bclayernamelabel.setText("Nome layer interni (opzionale):")
+            self.dialog.bclayernamelabel.setText("Internal layer name (optional):")
             self.gpkgNameLabel.show()
             self.gpkgNameLine.show()
         else:
-            self.dialog.bclayernamelabel.setText("Nome file di output (opzionale):")
+            self.dialog.bclayernamelabel.setText("Output file name (optional):")
             self.gpkgNameLabel.hide()
             self.gpkgNameLine.hide()
 
@@ -391,7 +391,7 @@ class BatchConverter:
         """Apre un selettore di file/directory per scegliere la sorgente"""
         source_dir = QFileDialog.getExistingDirectory(
             self.dialog,
-            "Seleziona directory con i file da convertire",
+            "Select directory containing files to convert",
             "",
             QFileDialog.ShowDirsOnly
         )
@@ -403,7 +403,7 @@ class BatchConverter:
         """Apre un selettore di directory per scegliere la destinazione"""
         dest_dir = QFileDialog.getExistingDirectory(
             self.dialog,
-            "Seleziona directory di destinazione",
+            "Select destination directory",
             "",
             QFileDialog.ShowDirsOnly
         )
@@ -467,7 +467,7 @@ class BatchConverter:
 
         # Cambia il testo del pulsante per indicare che è stato premuto
         original_text = self.dialog.bcaddsources.text()
-        self.dialog.bcaddsources.setText(f"Aggiornato ({len(files_found)} file)")
+        self.dialog.bcaddsources.setText(f"Updated ({len(files_found)} files)")
 
         # Ripristina il testo originale dopo 1,5 secondi
         QtCore.QTimer.singleShot(1500, lambda: self.dialog.bcaddsources.setText(original_text))
@@ -504,7 +504,7 @@ class BatchConverter:
             file_ext = os.path.splitext(file_path)[1].lower()
             file_type = "Vector" if file_ext in ['.shp', '.gpkg', '.geojson', '.gml', '.kml'] else "Raster"
             type_item = QTableWidgetItem(file_type)
-            type_item.setToolTip(f"Tipo di file: {file_type}")
+            type_item.setToolTip(f"File type: {file_type}")
             self.dialog.bctable.setItem(row_position, 1, type_item)
             
             # Dimensione del file
@@ -512,7 +512,7 @@ class BatchConverter:
             size_str = self.format_size(file_size)
             size_item = QTableWidgetItem(size_str)
             size_item.setData(Qt.UserRole, file_size)  # Memorizza la dimensione in byte per ordinamento
-            size_item.setToolTip(f"Dimensione: {size_str} ({file_size} bytes)")
+            size_item.setToolTip(f"Size: {size_str} ({file_size} bytes)")
             size_item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)  # Allinea a destra
             self.dialog.bctable.setItem(row_position, 2, size_item)
             
@@ -522,11 +522,11 @@ class BatchConverter:
             date_str = mod_date.strftime("%Y-%m-%d %H:%M")
             date_item = QTableWidgetItem(date_str)
             date_item.setData(Qt.UserRole, mod_time)  # Memorizza il timestamp per ordinamento
-            date_item.setToolTip(f"Ultima modifica: {date_str}")
+            date_item.setToolTip(f"Last modified: {date_str}")
             self.dialog.bctable.setItem(row_position, 3, date_item)
             
             # Stato iniziale
-            self.update_file_status(row_position, "In attesa")
+            self.update_file_status(row_position, "Pending")
         
         # Aggiorna il conteggio dei file
         self.update_file_count()
@@ -538,33 +538,33 @@ class BatchConverter:
         
         Args:
             row: Indice di riga nella tabella
-            status: Stato da impostare ("In attesa", "In elaborazione", "Completato", "Errore")
-            error_message: Messaggio di errore opzionale per tooltip
+            status: Stato da impostare ("Pending", "Processing", "Completed", "Error")
+            error_message: Messaggio di error opzionale per tooltip
         """
         status_item = QTableWidgetItem(status)
         
         # Imposta il colore in base allo stato
-        if status == "Completato":
+        if status == "Completed":
             status_item.setForeground(QtGui.QColor(0, 128, 0))  # Verde
-            status_item.setToolTip("Conversione completata con successo")
+            status_item.setToolTip("Conversion completed successfully")
             # Opzionale: aggiungi un'icona di successo
             # status_item.setIcon(QtGui.QIcon(":/plugins/qutility/images/success.png"))
-        elif status == "Errore":
+        elif status == "Error":
             status_item.setForeground(QtGui.QColor(255, 0, 0))  # Rosso
-            tooltip = "Si è verificato un errore durante la conversione"
+            tooltip = "An error occurred during conversion"
             if error_message:
                 tooltip += f": {error_message}"
             status_item.setToolTip(tooltip)
-            # Opzionale: aggiungi un'icona di errore
+            # Opzionale: aggiungi un'icona di error
             # status_item.setIcon(QtGui.QIcon(":/plugins/qutility/images/error.png"))
-        elif status == "In elaborazione":
+        elif status == "Processing":
             status_item.setForeground(QtGui.QColor(0, 0, 255))  # Blu
-            status_item.setToolTip("Conversione in corso...")
+            status_item.setToolTip("Conversion in progress...")
             # Opzionale: aggiungi un'icona di elaborazione
             # status_item.setIcon(QtGui.QIcon(":/plugins/qutility/images/processing.png"))
-        else:  # "In attesa" o altro
+        else:  # "Pending" o altro
             status_item.setForeground(QtGui.QColor(128, 128, 128))  # Grigio
-            status_item.setToolTip("In attesa di conversione")
+            status_item.setToolTip("Pending conversion")
         
         # Centra il testo nella cella
         status_item.setTextAlignment(Qt.AlignCenter)
@@ -606,7 +606,7 @@ class BatchConverter:
     def update_file_count(self):
         """Aggiorna l'etichetta del conteggio dei file"""
         count = self.dialog.bctable.rowCount()
-        self.dialog.bcfilecount.setText(f"File da convertire: {count}")
+        self.dialog.bcfilecount.setText(f"Files to convert: {count}")
     
     
     def start_conversion(self):
@@ -670,7 +670,7 @@ class BatchConverter:
 
         # RESET degli stati
         for row in range(self.dialog.bctable.rowCount()):
-            self.update_file_status(row, "In attesa")
+            self.update_file_status(row, "Pending")
         
         # Crea e mostra la finestra di progresso
         progress_dialog = ConversionProgressDialog(self.dialog, file_count)
@@ -713,7 +713,7 @@ class BatchConverter:
                         except Exception as e:
                             QMessageBox.warning(
                                 self.dialog, 
-                                "Errore", 
+                                "Error", 
                                 f"Unable to delete existing file: {str(e)}"
                             )
                             self.toggle_controls(True)
@@ -729,9 +729,9 @@ class BatchConverter:
             for row in range(self.dialog.bctable.rowCount()):
                 # Aggiorna l'UI e la progress bar
                 progress_dialog.update_progress(
-                    success_count + error_count, 
-                    file_count, 
-                    f"Elaborazione di {self.dialog.bctable.item(row, 0).text()}\n\nNon chiudere QGIS..."
+                    success_count + error_count,
+                    file_count,
+                    f"Processing {self.dialog.bctable.item(row, 0).text()}\n\nDo not close QGIS..."
                 )
                 QApplication.processEvents()
                 
@@ -741,7 +741,7 @@ class BatchConverter:
                 file_type = self.dialog.bctable.item(row, 1).text()
                 
                 # Aggiorna lo stato
-                self.update_file_status(row, "In elaborazione")
+                self.update_file_status(row, "Processing")
                 QApplication.processEvents()
                 
                 try:
@@ -775,7 +775,7 @@ class BatchConverter:
                             vector_layer = QgsVectorLayer(file_path, layer_name, "ogr")
                             
                             if not vector_layer.isValid():
-                                raise Exception(f"Layer non valido: {file_path}")
+                                raise Exception(f"Invalid layer: {file_path}")
                             
                             # Determina se è il primo layer o un layer successivo
                             is_first_layer = row == 0 or not os.path.exists(single_gpkg_path)
@@ -848,7 +848,7 @@ class BatchConverter:
                                     
                                     # Esecuzione del comando
                                     QgsMessageLog.logMessage(
-                                        f"Esecuzione comando: {' '.join(command)}", 
+                                        f"Executing command: {' '.join(command)}", 
                                         "BatchConverter", 
                                         level=0
                                     )
@@ -868,18 +868,18 @@ class BatchConverter:
                                     if process.returncode != 0:
                                         error_message = stderr.strip()
                                         QgsMessageLog.logMessage(
-                                            f"Errore ogr2ogr: {error_message}", 
+                                            f"Error ogr2ogr: {error_message}", 
                                             "BatchConverter", 
                                             level=2
                                         )
-                                        raise Exception(f"Errore ogr2ogr: {error_message}")
+                                        raise Exception(f"Error ogr2ogr: {error_message}")
                                     
                                     # Rimuovi il file temporaneo
                                     os.remove(temp_geojson)
                                     
                                 except Exception as e:
                                     QgsMessageLog.logMessage(
-                                        f"Errore nell'aggiunta del layer: {str(e)}", 
+                                        f"Error adding layer: {str(e)}", 
                                         "BatchConverter", 
                                         level=2
                                     )
@@ -902,7 +902,7 @@ class BatchConverter:
                                     
                                     # Informa l'utente
                                     QgsMessageLog.logMessage(
-                                        f"Layer salvato come file separato: {alternate_gpkg}", 
+                                        f"Layer saved as a separate file: {alternate_gpkg}", 
                                         "BatchConverter", 
                                         level=1
                                     )
@@ -911,25 +911,25 @@ class BatchConverter:
                                     if os.path.exists(temp_geojson):
                                         os.remove(temp_geojson)
                                     
-                                    # Interrompi con errore
-                                    raise Exception("Impossibile aggiungere il layer al GeoPackage")
+                                    # Interrompi con error
+                                    raise Exception("Cannot add the layer to the GeoPackage")
                             
                             # Verifica che il file esista
                             if os.path.exists(single_gpkg_path):
-                                self.update_file_status(row, "Completato")
+                                self.update_file_status(row, "Completed")
                                 success_count += 1
                             else:
-                                self.update_file_status(row, "Errore", "File non creato")
+                                self.update_file_status(row, "Error", "File not created")
                                 error_count += 1
                         
                         except Exception as e:
-                            # Errore in processing
+                            # Error in processing
                             QgsMessageLog.logMessage(
-                                f"Errore in processing: {str(e)}", 
+                                f"Error in processing: {str(e)}", 
                                 "BatchConverter", 
                                 level=2
                             )
-                            self.update_file_status(row, "Errore", str(e))
+                            self.update_file_status(row, "Error", str(e))
                             error_count += 1
                     
                     else:
@@ -941,10 +941,10 @@ class BatchConverter:
                         success = self.convert_single_file(file_path, output_file, output_format)
                         
                         if success:
-                            self.update_file_status(row, "Completato")
+                            self.update_file_status(row, "Completed")
                             success_count += 1
                         else:
-                            self.update_file_status(row, "Errore", "Conversione fallita")
+                            self.update_file_status(row, "Error", "Conversion failed")
                             error_count += 1
                     
                     # Aggiorna la progress bar
@@ -956,10 +956,10 @@ class BatchConverter:
                 except Exception as e:
                     # Gestione degli errori
                     error_message = str(e)
-                    self.update_file_status(row, "Errore", error_message)
+                    self.update_file_status(row, "Error", error_message)
                     error_count += 1
                     QgsMessageLog.logMessage(
-                        f"Errore nella conversione di {file_path}: {error_message}", 
+                        f"Error in the conversion of {file_path}: {error_message}", 
                         "BatchConverter", 
                         level=2
                     )
@@ -968,7 +968,7 @@ class BatchConverter:
                     progress_dialog.update_progress(
                         success_count + error_count, 
                         file_count, 
-                        f"Errore: {error_message}"
+                        f"Error: {error_message}"
                     )
             
             # Chiudi la finestra di progresso
@@ -987,7 +987,7 @@ class BatchConverter:
         except Exception as e:
             # Gestione degli errori generali
             QgsMessageLog.logMessage(
-                f"Errore generale nella conversione: {str(e)}", 
+                f"General error in conversion: {str(e)}", 
                 "BatchConverter", 
                 level=2
             )
@@ -997,7 +997,7 @@ class BatchConverter:
                 f"An error occurred during conversion: {str(e)}"
             )
             
-            # Chiudi la finestra di progresso in caso di errore
+            # Chiudi la finestra di progresso in caso di error
             progress_dialog.close()
         
         finally:
@@ -1066,14 +1066,14 @@ class BatchConverter:
             if output_format == 'DXF' and \
             "DXF layer does not support arbitrary field creation" in err_msg:
                 QgsMessageLog.logMessage(
-                    f"DXF: attributi ignorati come previsto per {input_file}", 
+                    f"DXF: Attributes ignored as expected for {input_file}", 
                     "BatchConverter", level=1
                 )
                 return True   # <-- SUCCESSO!
 
             # Altri errori: gestiscili normalmente
             QgsMessageLog.logMessage(
-                f"Errore nella conversione di {input_file}: {err_msg}", 
+                f"Error in the conversion of {input_file}: {err_msg}", 
                 "BatchConverter", level=2
             )
             return False
@@ -1084,7 +1084,7 @@ class BatchConverter:
         input_layer = QgsVectorLayer(input_file, "temp_layer", "ogr")
         if not input_layer.isValid():
             QgsMessageLog.logMessage(
-                f"Layer non valido: {input_file}", 
+                f"Invalid layer: {input_file}", 
                 "BatchConverter", 
                 level=2
             )
@@ -1105,7 +1105,7 @@ class BatchConverter:
                 if dest_crs and dest_crs.isValid():
                     # Log
                     QgsMessageLog.logMessage(
-                        f"Riproiezione a {dest_crs.authid()} richiesta", 
+                        f"Reprojection to {dest_crs.authid()} requested", 
                         "BatchConverter", 
                         level=0
                     )
@@ -1161,40 +1161,40 @@ class BatchConverter:
                             options
                         )
                         
-                        # Verifica l'errore (potrebbe essere un tuple o un int a seconda della versione)
+                        # Verifica l'error (potrebbe essere un tuple o un int a seconda della versione)
                         if isinstance(error_code, tuple):
                             error, error_message = error_code
                             if error != QgsVectorFileWriter.NoError:
                                 QgsMessageLog.logMessage(
-                                    f"Errore nella scrittura: {error_message}", 
+                                    f"Error in writing: {error_message}", 
                                     "BatchConverter", 
                                     level=2
                                 )
                                 return False
                         elif error_code != QgsVectorFileWriter.NoError:
                             QgsMessageLog.logMessage(
-                                f"Errore nella scrittura (codice: {error_code})", 
+                                f"Error in writing (code: {error_code})", 
                                 "BatchConverter", 
                                 level=2
                             )
                             return False
                         
                         QgsMessageLog.logMessage(
-                            f"Riproiezione e salvataggio completati con successo", 
+                            f"Reprojection and saving completed successfully", 
                             "BatchConverter", 
                             level=0
                         )
                         return True
                     else:
                         QgsMessageLog.logMessage(
-                            "Errore nell'algoritmo di riproiezione", 
+                            "Error in the re-projection algorithm", 
                             "BatchConverter", 
                             level=2
                         )
                         # Continua con il metodo standard come fallback
                 else:
                     QgsMessageLog.logMessage(
-                        "CRS di destinazione non valido", 
+                        "Invalid destination CRS", 
                         "BatchConverter", 
                         level=2
                     )
@@ -1226,19 +1226,19 @@ class BatchConverter:
                 options
             )
             
-            # Verifica l'errore
+            # Verifica l'error
             if isinstance(error_code, tuple):
                 error, error_message = error_code
                 if error != QgsVectorFileWriter.NoError:
                     QgsMessageLog.logMessage(
-                        f"Errore nella scrittura: {error_message}", 
+                        f"Error in writing: {error_message}", 
                         "BatchConverter", 
                         level=2
                     )
                     return False
             elif error_code != QgsVectorFileWriter.NoError:
                 QgsMessageLog.logMessage(
-                    f"Errore nella scrittura (codice: {error_code})", 
+                    f"Error in writing (code: {error_code})", 
                     "BatchConverter", 
                     level=2
                 )
@@ -1248,7 +1248,7 @@ class BatchConverter:
         
         except Exception as e:
             QgsMessageLog.logMessage(
-                f"Errore durante la conversione: {str(e)}", 
+                f"Error during conversion: {str(e)}", 
                 "BatchConverter", 
                 level=2
             )
@@ -1256,7 +1256,7 @@ class BatchConverter:
             # Fallback estremo senza opzioni, solo il formato di base
             try:
                 QgsMessageLog.logMessage(
-                    "Tentativo con metodo base senza opzioni", 
+                    "Attempting with basic method without options", 
                     "BatchConverter", 
                     level=0
                 )
@@ -1286,7 +1286,7 @@ class BatchConverter:
             
             except Exception as e2:
                 QgsMessageLog.logMessage(
-                    f"Errore nel fallback base: {str(e2)}", 
+                    f"Error in basic fallback: {str(e2)}", 
                     "BatchConverter", 
                     level=2
                 )
@@ -1301,7 +1301,7 @@ class BatchConverter:
         layer = QgsRasterLayer(input_file, "temp_raster")
         if not layer.isValid():
             QgsMessageLog.logMessage(
-                f"Layer raster non valido: {input_file}", 
+                f"Invalid raster layer: {input_file}", 
                 "BatchConverter", 
                 level=2
             )
@@ -1310,7 +1310,7 @@ class BatchConverter:
         # Per la conversione dei raster, dovresti utilizzare GDAL o QgsRasterFileWriter
         # Qui è solo un placeholder
         QgsMessageLog.logMessage(
-            f"La conversione raster non è ancora implementata per: {input_file}", 
+            f"Raster conversion is not yet implemented for: {input_file}", 
             "BatchConverter", 
             level=1
         )
@@ -1328,7 +1328,7 @@ class BatchConverter:
         """
         # Log per debug
         QgsMessageLog.logMessage(
-            f"Sanitizzazione per TAB: layer {src_layer.name()} con {src_layer.fields().count()} campi", 
+            f"Sanitizing for TAB: layer {src_layer.name()} with {src_layer.fields().count()} fields", 
             "BatchConverter", level=0
         )
         
@@ -1356,14 +1356,14 @@ class BatchConverter:
                 
                 field_stats[fld.name()] = {'max_val': max_val, 'max_decimals': max_decimals}
                 QgsMessageLog.logMessage(
-                    f"Statistiche campo {fld.name()}: max_val={max_val}, max_decimals={max_decimals}", 
+                    f"Field statistics {fld.name()}: max_val={max_val}, max_decimals={max_decimals}", 
                     "BatchConverter", level=0
                 )
         
         fixed_fields = QgsFields()
         for fld in src_layer.fields():
             QgsMessageLog.logMessage(
-                f"Campo: {fld.name()} - tipo: {fld.typeName()} - lunghezza: {fld.length()}", 
+                f"Field: {fld.name()} - type: {fld.typeName()} - length: {fld.length()}", 
                 "BatchConverter", level=0
             )
             
@@ -1375,7 +1375,7 @@ class BatchConverter:
                 if fld.name() in field_stats and field_stats[fld.name()]['max_val'] > 9.99e14:
                     # Converte in String per valori molto grandi
                     QgsMessageLog.logMessage(
-                        f"Campo {fld.name()} contiene valori troppo grandi, convertito in String", 
+                        f"Field {fld.name()} contains values that are too large, converted to String", 
                         "BatchConverter", level=0
                     )
                     new_fld = QgsField(fld.name(), QVariant.String, "String")
@@ -1403,7 +1403,7 @@ class BatchConverter:
                         new_fld.setPrecision(10)
                     
                     QgsMessageLog.logMessage(
-                        f"Campo {fld.name()} impostato come Real({new_fld.length()},{new_fld.precision()})", 
+                        f"Field {fld.name()} set as Real({new_fld.length()},{new_fld.precision()})", 
                         "BatchConverter", level=0
                     )
                     fixed_fields.append(new_fld)
@@ -1423,7 +1423,7 @@ class BatchConverter:
         
         # Log dei campi finali
         QgsMessageLog.logMessage(
-            f"Layer memory creato con {mem.fields().count()} campi", 
+            f"Memory layer created with {mem.fields().count()} fields", 
             "BatchConverter", level=0
         )
         
@@ -1471,7 +1471,7 @@ class BatchConverter:
         mem.updateExtents()
         
         QgsMessageLog.logMessage(
-            f"Copiate {len(features)} feature nel layer memory", 
+            f"Copied  {len(features)} features into the memory layer", 
             "BatchConverter", level=0
         )
         
@@ -1502,21 +1502,21 @@ class BatchConverter:
         try:
             # Prima soluzione: prova con ogr2ogr direttamente
             QgsMessageLog.logMessage(
-                f"Tentativo 1: conversione diretta da {input_file} a {output_file}", 
+                f"Attempt 1: direct conversion from {input_file} to {output_file}", 
                 "BatchConverter", level=0
             )
             result = self._convert_to_mapinfo_with_ogr(input_file, output_file)
             if result:
-                QgsMessageLog.logMessage("Conversione diretta con ogr2ogr riuscita", "BatchConverter", level=0)
+                QgsMessageLog.logMessage("Direct conversion with ogr2ogr successful", "BatchConverter", level=0)
                 return True
             
             # Se fallisce, prova con l'approccio della sanitizzazione
-            QgsMessageLog.logMessage("Tentativo 2: sanitizzazione e conversione in due passi", "BatchConverter", level=0)
+            QgsMessageLog.logMessage("Attempt 2: sanitization and conversion in two steps", "BatchConverter", level=0)
             
             # Carica il layer originale
             input_layer = QgsVectorLayer(input_file, "temp_layer", "ogr")
             if not input_layer.isValid():
-                QgsMessageLog.logMessage(f"Layer non valido: {input_file}", "BatchConverter", level=2)
+                QgsMessageLog.logMessage(f"Invalid layer: {input_file}", "BatchConverter", level=2)
                 return False
             
             # Crea un layer temporaneo con attributi modificati per MapInfo
@@ -1524,11 +1524,11 @@ class BatchConverter:
             
             # Verifica che il layer memory sia valido
             if not memory_layer.isValid() or memory_layer.featureCount() == 0:
-                QgsMessageLog.logMessage("Layer memory non valido o vuoto dopo sanitizzazione", "BatchConverter", level=2)
+                QgsMessageLog.logMessage("Invalid or empty memory layer after sanitization", "BatchConverter", level=2)
                 return False
             
             # Salva il layer temporaneo in un formato intermedio (GeoJSON)
-            QgsMessageLog.logMessage(f"Salvataggio layer memory in: {temp_geojson}", "BatchConverter", level=0)
+            QgsMessageLog.logMessage(f"Saving memory layer to: {temp_geojson}", "BatchConverter", level=0)
             
             # Usa QgsVectorFileWriter per salvare il layer memory in GeoJSON
             geojson_options = QgsVectorFileWriter.SaveVectorOptions()
@@ -1542,13 +1542,13 @@ class BatchConverter:
                 error_code, error_message = error
                 if error_code != QgsVectorFileWriter.NoError:
                     QgsMessageLog.logMessage(
-                        f"Errore nel salvataggio del GeoJSON temporaneo: {error_message}", 
+                        f"Error saving the temporary GeoJSON: {error_message}", 
                         "BatchConverter", level=2
                     )
                     return False
             elif error != QgsVectorFileWriter.NoError:
                 QgsMessageLog.logMessage(
-                    f"Errore nel salvataggio del GeoJSON temporaneo (codice: {error})", 
+                    f"Error saving the temporary GeoJSON (code: {error})", 
                     "BatchConverter", level=2
                 )
                 return False
@@ -1556,7 +1556,7 @@ class BatchConverter:
             # Verifica che il file temporaneo sia stato creato
             if not os.path.exists(temp_geojson):
                 QgsMessageLog.logMessage(
-                    f"File temporaneo non creato: {temp_geojson}", 
+                    f"Temporary file not created: {temp_geojson}", 
                     "BatchConverter", level=2
                 )
                 return False
@@ -1567,7 +1567,7 @@ class BatchConverter:
                 import processing # type: ignore
                 
                 QgsMessageLog.logMessage(
-                    f"Tentativo di conversione da GeoJSON ({temp_geojson}) a MapInfo ({output_file})", 
+                    f"Attempting conversion from GeoJSON ({temp_geojson}) to MapInfo ({output_file})", 
                     "BatchConverter", level=0
                 )
                 
@@ -1575,7 +1575,7 @@ class BatchConverter:
                 temp_layer = QgsVectorLayer(temp_geojson, "temp", "ogr")
                 if not temp_layer.isValid():
                     QgsMessageLog.logMessage(
-                        f"File GeoJSON temporaneo non valido: {temp_geojson}", 
+                        f"Invalid temporary GeoJSON file: {temp_geojson}", 
                         "BatchConverter", level=2
                     )
                     return False
@@ -1589,7 +1589,7 @@ class BatchConverter:
                 # Se è richiesta una riproiezione, includi il TARGET_CRS
                 if self.dialog.bctransformcrs.isChecked() and self.dialog.bcoutputcrs.crs().isValid():
                     params['TARGET_CRS'] = self.dialog.bcoutputcrs.crs()
-                    QgsMessageLog.logMessage("Aggiunta riproiezione nella conversione", "BatchConverter", level=0)
+                    QgsMessageLog.logMessage("Added reprojection to the conversion", "BatchConverter", level=0)
                     processing.run("native:reprojectlayer", params)
                 else:
                     processing.run("native:savefeatures", params)
@@ -1597,7 +1597,7 @@ class BatchConverter:
                 # Verifica il risultato prima di rimuovere il file temporaneo
                 if os.path.exists(output_file):
                     QgsMessageLog.logMessage(
-                        f"Conversione riuscita, file creato: {output_file}", 
+                        f"Conversion successful, file created: {output_file}", 
                         "BatchConverter", level=0
                     )
                     # Rimuovi il file temporaneo
@@ -1606,13 +1606,13 @@ class BatchConverter:
                     return True
                 else:
                     QgsMessageLog.logMessage(
-                        f"File di output non creato: {output_file}", 
+                        f"Output file not created: {output_file}", 
                         "BatchConverter", level=2
                     )
             
             except Exception as e:
                 QgsMessageLog.logMessage(
-                    f"Errore con algoritmo di processing: {str(e)}", 
+                    f"Error with processing algorithm: {str(e)}", 
                     "BatchConverter", level=2
                 )
             
@@ -1620,7 +1620,7 @@ class BatchConverter:
             # Ultimo tentativo: usa ogr2ogr direttamente sul file GeoJSON
             if os.path.exists(temp_geojson):
                 QgsMessageLog.logMessage(
-                    f"Tentativo 3: conversione da GeoJSON a MapInfo con ogr2ogr", 
+                    f"Attempt 3: conversion from GeoJSON to MapInfo with ogr2ogr", 
                     "BatchConverter", level=0
                 )
                 result = self._convert_temp_geojson_to_mapinfo_with_ogr(temp_geojson, output_file)
@@ -1638,7 +1638,7 @@ class BatchConverter:
             
         except Exception as e:
             QgsMessageLog.logMessage(
-                f"Errore durante la conversione a MapInfo: {str(e)}", 
+                f"Error during conversion to MapInfo: {str(e)}", 
                 "BatchConverter", level=2
             )
             
@@ -1659,7 +1659,7 @@ class BatchConverter:
             # Verifica che il file temporaneo esista
             if not os.path.exists(temp_geojson):
                 QgsMessageLog.logMessage(
-                    f"File temporaneo GeoJSON non trovato: {temp_geojson}", 
+                    f"Temporary GeoJSON file not found: {temp_geojson}", 
                     "BatchConverter", level=2
                 )
                 return False
@@ -1684,7 +1684,7 @@ class BatchConverter:
             # Esecuzione del comando
             command_str = ' '.join(command)
             QgsMessageLog.logMessage(
-                f"Ultimo tentativo di conversione con ogr2ogr: {command_str}", 
+                f"Final attempt at conversion with ogr2ogr: {command_str}", 
                 "BatchConverter", level=0
             )
             
@@ -1703,7 +1703,7 @@ class BatchConverter:
             if process.returncode != 0:
                 error_message = stderr.strip()
                 QgsMessageLog.logMessage(
-                    f"Errore ogr2ogr finale: {error_message}", 
+                    f"Final ogr2ogr error: {error_message}", 
                     "BatchConverter", level=2
                 )
                 return False
@@ -1711,14 +1711,14 @@ class BatchConverter:
             # Verifica che il file esista
             result = os.path.exists(output_file)
             QgsMessageLog.logMessage(
-                f"Risultato conversione ogr2ogr finale: {result}", 
+                f"Final ogr2ogr conversion result: {result}", 
                 "BatchConverter", level=0
             )
             return result
             
         except Exception as e:
             QgsMessageLog.logMessage(
-                f"Errore nel fallback finale per MapInfo: {str(e)}", 
+                f"Error in final fallback for MapInfo: {str(e)}", 
                 "BatchConverter", level=2
             )
             return False
@@ -1747,7 +1747,7 @@ class BatchConverter:
             
             # Esecuzione del comando
             QgsMessageLog.logMessage(
-                f"Tentativo di conversione con ogr2ogr: {' '.join(command)}", 
+                f"Attempting conversion with ogr2ogr: {' '.join(command)}", 
                 "BatchConverter", level=0
             )
             
@@ -1766,7 +1766,7 @@ class BatchConverter:
             if process.returncode != 0:
                 error_message = stderr.strip()
                 QgsMessageLog.logMessage(
-                    f"Errore ogr2ogr per MapInfo: {error_message}", 
+                    f"ogr2ogr error for MapInfo: {error_message}", 
                     "BatchConverter", level=2
                 )
                 return False
@@ -1776,7 +1776,7 @@ class BatchConverter:
         
         except Exception as e:
             QgsMessageLog.logMessage(
-                f"Errore nel fallback ogr2ogr per MapInfo: {str(e)}", 
+                f"Error in the ogr2ogr fallback for MapInfo: {str(e)}", 
                 "BatchConverter", level=2
             )
             return False

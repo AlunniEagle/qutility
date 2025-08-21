@@ -99,8 +99,8 @@ class FeatureExcluder:
         self.dialog.efspat.setCurrentIndex(0)
         
         # Add tooltips for each option
-        self.dialog.efspat.setItemData(0, "Le geometrie si intersecano se hanno almeno un punto in comune (a buffer tolerance)", Qt.ToolTipRole)
-        self.dialog.efspat.setItemData(1, "Il layer sorgente contiene completamente il layer di confronto (a buffer tolerance)", Qt.ToolTipRole)
+        self.dialog.efspat.setItemData(0, "Geometries intersect if they have at least one point in common (a buffer tolerance)", Qt.ToolTipRole)
+        self.dialog.efspat.setItemData(1, "The source layer completely contains the comparison layer (a buffer tolerance)", Qt.ToolTipRole)
 
     def toggle_geometry_options(self, state):
         """Attiva/disattiva le opzioni legate alla geometria"""
@@ -129,11 +129,11 @@ class FeatureExcluder:
         
         # Update tooltip based on state
         if not geometry_enabled:
-            self.dialog.efspat.setToolTip("Attiva 'Confronta anche la geometria' per utilizzare questa opzione")
+            self.dialog.efspat.setToolTip("Activate 'Also compare the geometry' to use this option")
         elif not tolerance_non_zero:
-            self.dialog.efspat.setToolTip("Imposta una tolleranza > 0 per utilizzare questa opzione")
+            self.dialog.efspat.setToolTip("Set a tolerance > 0 to use this option")
         else:
-            self.dialog.efspat.setToolTip("Seleziona il tipo di relazione spaziale da utilizzare")
+            self.dialog.efspat.setToolTip("Select the type of spatial relationship to use")
 
     def safe_populate_layer_lists(self):
         """Wrapper around populate_layer_lists to catch exceptions"""
@@ -231,12 +231,12 @@ class FeatureExcluder:
         
         layer = self.dialog.eflayerdef.currentData()
         if not layer:
-            self.dialog.eflabelsource.setText("Feature nel layer sorgente: --")
+            self.dialog.eflabelsource.setText("Features in the source layer.: --")
             return
         
         # Update the statistics label with feature count
         feature_count = layer.featureCount()
-        self.dialog.eflabelsource.setText(f"Feature nel layer sorgente: {feature_count}")
+        self.dialog.eflabelsource.setText(f"Features in the source layer.: {feature_count}")
         
         # Popola i campi del layer sorgente
         for field in layer.fields():
@@ -248,12 +248,12 @@ class FeatureExcluder:
         
         layer = self.dialog.eflayermatch.currentData()
         if not layer:
-            self.dialog.eflabelmatch.setText("Feature nel layer di confronto: --")
+            self.dialog.eflabelmatch.setText("Features in the comparison layer.: --")
             return
         
         # Update the statistics label with feature count
         feature_count = layer.featureCount()
-        self.dialog.eflabelmatch.setText(f"Feature nel layer di confronto: {feature_count}")
+        self.dialog.eflabelmatch.setText(f"Features in the comparison layer.: {feature_count}")
         
         # Popola i campi del layer di confronto
         for field in layer.fields():
@@ -505,13 +505,13 @@ class FeatureExcluder:
             if check_geometry:
                 features_with_equal_geom = [fid for fid in features_to_delete 
                                         if fid not in features_with_different_geom]
-                info_label.setText(f"Trovate {len(features_to_delete)} feature da eliminare.\n"
-                                f"Di cui {len(features_with_equal_geom)} con geometria uguale e "
-                                f"{len(features_with_different_geom)} con geometria diversa.")
+                info_label.setText(f"Found {len(features_to_delete)} features to delete.\n"
+                                f"Of which {len(features_with_equal_geom)} have equal geometry and "
+                                f"{len(features_with_different_geom)} have different geometry.")
                 
                 # If we transformed coordinates, add an info label
                 if need_transform_source or need_transform_match:
-                    crs_info = QtWidgets.QLabel(" Le geometrie sono state temporaneamente trasformate in EPSG:32632.")
+                    crs_info = QtWidgets.QLabel(" Geometries have been temporarily transformed to EPSG:32632.")
                     crs_info.setStyleSheet("color: #0066cc; font-style: italic;")
                     layout.addWidget(crs_info)
 
@@ -520,7 +520,7 @@ class FeatureExcluder:
                     relation_name = self.dialog.efspat.currentText()
                     
                     # Display information about the relation being used
-                    info_text = f" Le feature sono state analizzate con la relazione spaziale '{relation_name}' e una tolleranza di {tolerance} metri."
+                    info_text = f" Features have been analyzed using the spatial relation '{relation_name}' with a tolerance of {tolerance} meters."
                     
                     relation_info = QtWidgets.QLabel(info_text)
                     relation_info.setStyleSheet("color: #0066cc; font-style: italic;")
@@ -537,12 +537,12 @@ class FeatureExcluder:
                     # layout.addWidget(caseinfo3)
 
             if self.dialog.efbkp.isChecked():
-                    backup_info = QtWidgets.QLabel(" Verrà eseguito il backup del layer sorgente prima dell'eliminazione delle feature, salvato nella stessa directory.")
+                    backup_info = QtWidgets.QLabel("A backup of the source layer will be created before deleting features, saved in the same directory.")
                     backup_info.setStyleSheet("color: #0066cc; font-style: italic;")
                     layout.addWidget(backup_info)
 
             if self.dialog.efcase.isChecked(): # and not self.dialog.eftrim.isChecked():
-                caseinfo = QtWidgets.QLabel(" Le feature sono state analizzate rispettando le maiuscole e le minuscole.")
+                caseinfo = QtWidgets.QLabel(" Features have been analyzed respecting uppercase and lowercase letters.")
                 caseinfo.setStyleSheet("color: #0066cc; font-style: italic;")
                 layout.addWidget(caseinfo)
 
@@ -566,7 +566,7 @@ class FeatureExcluder:
             
             # Set up the table columns
             table.setColumnCount(len(field_names) + 2)  # +2 for FID and Geometry Status
-            headers = ["FID", "Stato Geometria"] + field_names
+            headers = ["FID", "Geometry Status"] + field_names
             table.setHorizontalHeaderLabels(headers)
             
             # Fill the table with data
@@ -583,9 +583,9 @@ class FeatureExcluder:
                 # Geometry status column
                 if check_geometry:
                     if feature.id() in features_with_different_geom:
-                        geom_status = "Diversa"
+                        geom_status = "Different"
                     else:
-                        geom_status = "Uguale"
+                        geom_status = "Equal"
                     geom_item = QtWidgets.QTableWidgetItem(geom_status)
                     table.setItem(i, 1, geom_item)
                 else:
@@ -608,27 +608,27 @@ class FeatureExcluder:
             # filter_layout.addStretch()
             
             # Quick selection buttons
-            select_all_btn = QtWidgets.QPushButton(" Seleziona Tutti ")
-            select_all_btn.setToolTip("Seleziona tutte le feature nella tabella")
+            select_all_btn = QtWidgets.QPushButton(" Select All ")
+            select_all_btn.setToolTip("Select all features in the table")
             select_all_btn.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             select_all_btn.clicked.connect(lambda: self.select_with_focus(table, lambda: table.selectAll()))
             filter_layout.addWidget(select_all_btn)
             
-            select_none_btn = QtWidgets.QPushButton(" Deseleziona Tutti ")
-            select_none_btn.setToolTip("Deseleziona tutte le feature nella tabella")
+            select_none_btn = QtWidgets.QPushButton(" Deselect all ")
+            select_none_btn.setToolTip("Deselect all features in the table")
             select_none_btn.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             select_none_btn.clicked.connect(lambda: self.select_with_focus(table, lambda: table.clearSelection()))
             filter_layout.addWidget(select_none_btn)
             
             if check_geometry:
-                select_equal_geom_btn = QtWidgets.QPushButton(" Seleziona Geometria Uguale ")
-                select_equal_geom_btn.setToolTip("Seleziona solo le feature con geometria uguale")
+                select_equal_geom_btn = QtWidgets.QPushButton(" Select Equal Geometry ")
+                select_equal_geom_btn.setToolTip("Select only features with equal geometry")
                 select_equal_geom_btn.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
                 select_equal_geom_btn.clicked.connect(lambda: self.select_with_focus(table, lambda: self.select_by_geometry(table, features_with_different_geom, False)))
                 filter_layout.addWidget(select_equal_geom_btn)
                 
-                select_diff_geom_btn = QtWidgets.QPushButton(" Seleziona Geometria Diversa ")
-                select_diff_geom_btn.setToolTip("Seleziona solo le feature con geometria diversa")
+                select_diff_geom_btn = QtWidgets.QPushButton(" Select Different Geometry ")
+                select_diff_geom_btn.setToolTip("Select only features with different geometry")
                 select_diff_geom_btn.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
                 select_diff_geom_btn.clicked.connect(lambda: self.select_with_focus(table, lambda: self.select_by_geometry(table, features_with_different_geom, True)))
                 filter_layout.addWidget(select_diff_geom_btn)
@@ -643,8 +643,8 @@ class FeatureExcluder:
             # layout.addWidget(button_box)
 
             # Add a button for exporting to CSV
-            export_button = QtWidgets.QPushButton(" Esporta in CSV (Selezionati) ")
-            export_button.setToolTip("Esporta le feature selezionate in un file CSV")
+            export_button = QtWidgets.QPushButton(" Export to CSV (Selected) ")
+            export_button.setToolTip("Export selected features to a CSV file")
             export_button.setIcon(QtGui.QIcon(":/plugins/qutility/images/csv.png"))
             export_button.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             export_button.clicked.connect(lambda: self.select_with_focus(table, lambda: self.export_table_to_csv(table)))
@@ -653,8 +653,8 @@ class FeatureExcluder:
             button_layout.addWidget(export_button)
             # button_layout.addSpacing(20)
             # Add temporary layer button
-            temp_layer_button = QtWidgets.QPushButton(" Crea Layer Temporaneo (Selezionati) ")
-            temp_layer_button.setToolTip("Crea un nuovo layer temporaneo con le feature selezionate")
+            temp_layer_button = QtWidgets.QPushButton(" Create Temporary Layer (Selected) ")
+            temp_layer_button.setToolTip("Create a new temporary layer with the selected features")
             temp_layer_button.setIcon(QtGui.QIcon(":/plugins/qutility/images/processor.png"))
             temp_layer_button.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             temp_layer_button.clicked.connect(lambda: self.select_with_focus(table, lambda: self.create_temp_layer(table, source_layer, features_with_different_geom if check_geometry else None)))
@@ -663,15 +663,15 @@ class FeatureExcluder:
             # button_box.accepted.connect(selection_dialog.accept)
             # button_box.rejected.connect(selection_dialog.reject)
             
-            delete_button = QtWidgets.QPushButton(" Elimina Feature (Selezionati) ")
-            delete_button.setToolTip("Elimina definitivamente le feature selezionate dal layer")
+            delete_button = QtWidgets.QPushButton(" Delete Features (Selected) ")
+            delete_button.setToolTip("Permanently delete the selected features from the layer")
             delete_button.setIcon(QtGui.QIcon(":/plugins/qutility/images/delete.png"))
             delete_button.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             delete_button.clicked.connect(selection_dialog.accept)
             button_layout.addWidget(delete_button)
 
-            cancel_button = QtWidgets.QPushButton(" Chiudi ")
-            cancel_button.setToolTip("Chiude la tabella e annulla l'operazione senza eliminare alcuna feature")
+            cancel_button = QtWidgets.QPushButton(" Close ")
+            cancel_button.setToolTip("Closes the table and cancels the operation without deleting any features")
             cancel_button.setIcon(QtGui.QIcon(":/plugins/qutility/images/close.png"))
             cancel_button.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
             cancel_button.clicked.connect(selection_dialog.reject)
@@ -902,7 +902,7 @@ class FeatureExcluder:
                 return None
                 
         except Exception as e:
-            print(f"Errore durante la creazione del backup del livello di memoria: {str(e)}")
+            print(f"Error while creating memory layer backup: {str(e)}")
             return None
 
     def zip_shapefile(self, shapefile_path):
@@ -932,7 +932,7 @@ class FeatureExcluder:
             return zip_path
         
         except Exception as e:
-            print(f"Errore durante la compressione dello shapefile: {str(e)}")
+            print(f"Error while compressing the shapefile: {str(e)}")
             return None
         
     def export_table_to_csv(self, table):
@@ -955,9 +955,9 @@ class FeatureExcluder:
             # Ask user for save location
             filepath, _ = QFileDialog.getSaveFileName(
                 self.dialog,
-                "Salva CSV",
+                "Save CSV",
                 default_filename,
-                "File CSV (*.csv)"
+                "CSV File (*.csv)"
             )
             
             if not filepath:
@@ -1003,9 +1003,9 @@ class FeatureExcluder:
                 writer.writerow([])
                 
                 # Write summary info
-                writer.writerow(["Riepilogo:"])
-                writer.writerow(["Layer sorgente:", source_layer.name()])
-                writer.writerow(["Feature totali:", str(len(selected_indices))])
+                writer.writerow(["Summary:"])
+                writer.writerow(["Source layer:", source_layer.name()])
+                writer.writerow(["Total features:", str(len(selected_indices))])
                 
                 # Count geometries by status
                 equal_count = 0
@@ -1014,21 +1014,21 @@ class FeatureExcluder:
                 for row_idx in selected_indices:
                     status_item = table.item(row_idx, 1)
                     if status_item:
-                        if status_item.text() == "Uguale":
+                        if status_item.text() == "Equal":
                             equal_count += 1
-                        elif status_item.text() == "Diversa":
+                        elif status_item.text() == "Different":
                             different_count += 1
                 
-                if "Stato Geometria" in headers:
-                    writer.writerow(["Feature con geometria uguale:", str(equal_count)])
-                    writer.writerow(["Feature con geometria diversa:", str(different_count)])
+                if "Geometry Status" in headers:
+                    writer.writerow(["Features with equal geometry:", str(equal_count)])
+                    writer.writerow(["Features with different geometry:", str(different_count)])
 
-                writer.writerow(["Configurazione:"])
-                writer.writerow(["Confronto case sensitive:", "Sì" if self.dialog.efcase.isChecked() else "No"])
+                writer.writerow(["Configuration:"])
+                writer.writerow(["Case sensitive comparison:", "Yes" if self.dialog.efcase.isChecked() else "No"])
                 # writer.writerow(["Considera spazi iniziali/finali:", "Sì" if self.dialog.eftrim.isChecked() else "No"])
                 
                 # Add timestamp
-                writer.writerow(["Report generato il:", datetime.datetime.now().strftime("%d/%m/%Y %H:%M")])
+                writer.writerow(["Report generated on:", datetime.datetime.now().strftime("%d/%m/%Y %H:%M")])
             
             # Show success message
             QMessageBox.information(
@@ -1139,10 +1139,10 @@ class FeatureExcluder:
             
             # Add a new field for geometry status
             if features_with_different_geom is not None:
-                status_field = QgsField("Stato_Geom", QVariant.String, "string", 10)
+                status_field = QgsField("Geom_Status", QVariant.String, "string", 10)
                 provider.addAttributes([status_field])
                 temp_layer.updateFields()
-                status_field_idx = temp_layer.fields().indexFromName("Stato_Geom")
+                status_field_idx = temp_layer.fields().indexFromName("Geom_Status")
             
             # Copy features from source layer
             request = QgsFeatureRequest().setFilterFids(feature_ids)
@@ -1159,9 +1159,9 @@ class FeatureExcluder:
                 # Set geometry status if applicable
                 if features_with_different_geom is not None:
                     if feature.id() in features_with_different_geom:
-                        new_feature[status_field_idx] = "Diversa"
+                        new_feature[status_field_idx] = "Different"
                     else:
-                        new_feature[status_field_idx] = "Uguale"
+                        new_feature[status_field_idx] = "Equal"
                 
                 # Copy geometry
                 new_feature.setGeometry(feature.geometry())
@@ -1198,7 +1198,7 @@ class FeatureExcluder:
             from qgis.core import QgsSymbol, QgsRendererCategory, QgsCategorizedSymbolRenderer # type: ignore
             
             # Get the field index for the status field
-            field_idx = layer.fields().indexFromName("Stato_Geom")
+            field_idx = layer.fields().indexFromName("Geom_Status")
             if field_idx < 0:
                 return  # Field not found
             
@@ -1209,31 +1209,31 @@ class FeatureExcluder:
             symbol_equal = QgsSymbol.defaultSymbol(layer.geometryType())
             symbol_equal.setColor(QtGui.QColor(0, 255, 0))  # Green
             symbol_equal.setOpacity(0.9)
-            cat_equal = QgsRendererCategory("Uguale", symbol_equal, "Geometria Uguale")
+            cat_equal = QgsRendererCategory("Equal", symbol_equal, "Equal Geometry")
             categories.append(cat_equal)
             
             # Different geometry - Red
             symbol_diff = QgsSymbol.defaultSymbol(layer.geometryType())
             symbol_diff.setColor(QtGui.QColor(255, 0, 0))  # Red
             symbol_diff.setOpacity(0.9)
-            cat_diff = QgsRendererCategory("Diversa", symbol_diff, "Geometria Diversa")
+            cat_diff = QgsRendererCategory("Different", symbol_diff, "Different Geometry")
             categories.append(cat_diff)
             
             # Create and apply the renderer
-            renderer = QgsCategorizedSymbolRenderer("Stato_Geom", categories)
+            renderer = QgsCategorizedSymbolRenderer("Geom_Status", categories)
             layer.setRenderer(renderer)
             
             # Refresh the layer
             layer.triggerRepaint()
             
         except Exception as e:
-            print(f"Errore nell'applicare la stilizzazione: {str(e)}")
+            print(f"Error applying styling: {str(e)}")
 
     def show_spatial_relations_help(self):
         """Show help popup for spatial relations"""
         # Create a new dialog for the help content
         help_dialog = QtWidgets.QDialog(self.dialog)
-        help_dialog.setWindowTitle("Aiuto Relazioni Spaziali")
+        help_dialog.setWindowTitle("Spatial Relations Help")
         help_dialog.setMinimumSize(900, 850)
         
         # Create layout
@@ -1397,7 +1397,7 @@ class FeatureExcluder:
         layout.addWidget(text_browser)
         
         # Add a close button
-        close_button = QtWidgets.QPushButton("Chiudi")
+        close_button = QtWidgets.QPushButton("Close")
         close_button.clicked.connect(help_dialog.accept)
         close_button.setCursor(QtGui.QCursor(Qt.PointingHandCursor))
         

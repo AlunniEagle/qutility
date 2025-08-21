@@ -121,13 +121,13 @@ class LayerLoader:
         """Apre un selettore di file/directory per scegliere la sorgente"""
         # Crea un dialog personalizzato per la scelta
         dialog = QtWidgets.QDialog(self.dialog)
-        dialog.setWindowTitle("Tipo di sorgente")
+        dialog.setWindowTitle("Source type")
         
         layout = QtWidgets.QVBoxLayout()
         
         # Aggiungi radio button
         dir_radio = QtWidgets.QRadioButton("Directory")
-        file_radio = QtWidgets.QRadioButton("File compresso (ZIP, TAR, ecc.)")
+        file_radio = QtWidgets.QRadioButton("Compressed file (ZIP, TAR, etc.)")
         dir_radio.setChecked(True)  # Default a directory
         
         layout.addWidget(dir_radio)
@@ -149,7 +149,7 @@ class LayerLoader:
                 # Seleziona directory
                 source_path = QFileDialog.getExistingDirectory(
                     self.dialog,
-                    "Seleziona una directory",
+                    "Select a directory",
                     "",
                     QFileDialog.ShowDirsOnly
                 )
@@ -157,9 +157,9 @@ class LayerLoader:
                 # Seleziona file
                 source_path, _ = QFileDialog.getOpenFileName(
                     self.dialog,
-                    "Seleziona un file compresso",
+                    "Select a compressed file",
                     "",
-                    "File compressi (*.zip *.tar *.rar *.7z *.gz);;Tutti i file (*.*)"
+                    "Compressed files (*.zip *.tar *.rar *.7z *.gz);;All files (*.*)"
                 )
                 
             if source_path:

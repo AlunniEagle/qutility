@@ -3268,8 +3268,5 @@ p, li { white-space: pre-wrap; }
    <header>qgsprojectionselectionwidget.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
  <connections/>
 </ui>

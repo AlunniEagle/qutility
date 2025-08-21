@@ -174,8 +174,8 @@ class QUtility:
             icon_path,
             text=self.tr(u'QUtility'),
             callback=self.run,
-            status_tip=self.tr(u'Un toolbox multifunzione per QGIS'),
-            whats_this=self.tr(u'Un toolbox multifunzione per QGIS'),
+            status_tip=self.tr(u'A multi-function toolbox for QGIS'),
+            whats_this=self.tr(u'A multi-function toolbox for QGIS'),
             parent=self.iface.mainWindow())
 
         # will be set False in run()
@@ -327,7 +327,7 @@ class QUtility:
                     temp_layer1.updateFields()
                     temp_layer1.dataProvider().addFeatures(selected_features1)
                     input_layer1 = temp_layer1
-                    QgsMessageLog.logMessage(f"Creato layer temporaneo per {layer1.name()} con {len(selected_features1)} elementi selezionati", "QUtility", Qgis.Info)
+                    QgsMessageLog.logMessage(f"Created a temporary layer for {layer1.name()} with {len(selected_features1)} selected features", "QUtility", Qgis.Info)
                     
                 if use_selected_layer2:
                     # Crea un layer temporaneo con solo gli elementi selezionati  
@@ -338,9 +338,9 @@ class QUtility:
                     temp_layer2.updateFields()
                     temp_layer2.dataProvider().addFeatures(selected_features2)
                     input_layer2 = temp_layer2
-                    QgsMessageLog.logMessage(f"Creato layer temporaneo per {layer2.name()} con {len(selected_features2)} elementi selezionati", "QUtility", Qgis.Info)
+                    QgsMessageLog.logMessage(f"Created a temporary layer for {layer2.name()} with {len(selected_features2)} selected features", "QUtility", Qgis.Info)
                 
-                QgsMessageLog.logMessage(f"Layer temporanei: Layer1={input_layer1.name()}, Layer2={input_layer2.name()}", "QUtility", Qgis.Info)
+                QgsMessageLog.logMessage(f"Temporary layers: Layer1={input_layer1.name()}, Layer2={input_layer2.name()}", "QUtility", Qgis.Info)
                 
                 # Prepara i parametri per lo script processing
                 parameters = {
@@ -351,7 +351,7 @@ class QUtility:
                 
                 # Esegui lo script processing
                 QgsMessageLog.logMessage(
-                    "Avvio elaborazione Overlaps Counter...", 
+                    "Starting Overlaps Counter processing...", 
                     "QUtility", 
                     Qgis.Info
                 )
@@ -373,7 +373,7 @@ class QUtility:
                             
                             if output_layer.isValid():
                                 QgsProject.instance().addMapLayer(output_layer)
-                                QgsMessageLog.logMessage(f"Layer {layer_name} caricato nel progetto", "QUtility", Qgis.Info)
+                                QgsMessageLog.logMessage(f"Layer {layer_name} loaded into the project", "QUtility", Qgis.Info)
                                 
                                 # Calcola statistiche sui risultati
                                 total_features = output_layer.featureCount()
@@ -405,20 +405,20 @@ class QUtility:
                                                     total_overlaps += n_overlaps
                                                     max_overlaps = max(max_overlaps, n_overlaps)
                                                     
-                                    QgsMessageLog.logMessage(f"Statistiche: {total_features} elementi totali, {features_with_overlaps} con sovrapposizioni", "QUtility", Qgis.Info)
+                                    QgsMessageLog.logMessage(f"Statistics: {total_features} total features, {features_with_overlaps} with overlaps", "QUtility", Qgis.Info)
                                     
                                 except Exception as stats_error:
-                                    QgsMessageLog.logMessage(f"Errore nel calcolo delle statistiche: {str(stats_error)}", "QUtility", Qgis.Warning)
+                                    QgsMessageLog.logMessage(f"An error occurred while calculating the statistics: {str(stats_error)}", "QUtility", Qgis.Warning)
                                     features_with_overlaps = "N/A"
                                     max_overlaps = "N/A"
                                     total_overlaps = "N/A"
                             else:
-                                QgsMessageLog.logMessage(f"Layer {layer_name} non valido", "QUtility", Qgis.Warning)
+                                QgsMessageLog.logMessage(f"Invalid layer {layer_name}", "QUtility", Qgis.Warning)
                         else:
-                            QgsMessageLog.logMessage(f"File di output non trovato: {output_path}", "QUtility", Qgis.Warning)
+                            QgsMessageLog.logMessage(f"Output file not found: {output_path}", "QUtility", Qgis.Warning)
                             
                 except Exception as layer_error:
-                    QgsMessageLog.logMessage(f"Errore nel caricamento del layer: {str(layer_error)}", "QUtility", Qgis.Critical)
+                    QgsMessageLog.logMessage(f"Error loading layer: {str(layer_error)}", "QUtility", Qgis.Critical)
                 
                 # Calcola il tempo di esecuzione
                 end_time = time.time()
@@ -426,9 +426,9 @@ class QUtility:
                 minutes = int(execution_time // 60)
                 seconds = execution_time % 60
                 if minutes > 0:
-                    QgsMessageLog.logMessage(f"⏱️ Elaborazione completata in {minutes} minuti e {seconds:.2f} secondi", "QUtility", Qgis.Info)
+                    QgsMessageLog.logMessage(f"⏱️ Processing completed in {minutes} minutes and {seconds:.2f} seconds", "QUtility", Qgis.Info)
                 else:
-                    QgsMessageLog.logMessage(f"⏱️ Elaborazione completata in {seconds:.2f} secondi", "QUtility", Qgis.Info)
+                    QgsMessageLog.logMessage(f"⏱️ Processing completed in {seconds:.2f} seconds", "QUtility", Qgis.Info)
 
                 # Mostra popup di successo
                 success_message = "Overlaps Counter processing completed successfully!\n\n"
@@ -436,8 +436,8 @@ class QUtility:
                 QMessageBox.information(self.dlg, "Overlaps Counter", success_message)
                 
             except Exception as e:
-                QgsMessageLog.logMessage(f"Errore durante l'esecuzione Overlaps Counter: {str(e)}", "QUtility", Qgis.Critical)
+                QgsMessageLog.logMessage(f"An error occurred during the execution of Overlaps Counter: {str(e)}", "QUtility", Qgis.Critical)
                 self.iface.messageBar().pushCritical(
-                    "Errore", 
-                    f"Errore durante l'esecuzione Overlaps Counter: {str(e)}"
+                    "Error", 
+                    f"An error occurred during the execution of Overlaps Counter: {str(e)}"
                 )
